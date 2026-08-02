@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as ControlRouteImport } from './routes/control'
+import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as PlannerRouteImport } from './routes/planner'
@@ -29,6 +30,11 @@ const AnalyticsRoute = AnalyticsRouteImport.update({
 const ControlRoute = ControlRouteImport.update({
   id: '/control',
   path: '/control',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetRoute = FleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
@@ -68,20 +76,36 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analytics' | '/control' | '/history' | '/live' | '/planner'
+  fullPaths:
+    | '/'
+    | '/analytics'
+    | '/control'
+    | '/fleet'
+    | '/history'
+    | '/live'
+    | '/planner'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analytics' | '/control' | '/history' | '/live' | '/planner'
+  to:
+    | '/'
+    | '/analytics'
+    | '/control'
+    | '/fleet'
+    | '/history'
+    | '/live'
+    | '/planner'
   id:
     | '__root__'
     | '/'
     | '/analytics'
     | '/control'
+    | '/fleet'
     | '/history'
     | '/live'
     | '/planner'
@@ -91,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
   ControlRoute: typeof ControlRoute
+  FleetRoute: typeof FleetRoute
   HistoryRoute: typeof HistoryRoute
   LiveRoute: typeof LiveRoute
   PlannerRoute: typeof PlannerRoute
@@ -117,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/control'
       fullPath: '/control'
       preLoaderRoute: typeof ControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet': {
+      id: '/fleet'
+      path: '/fleet'
+      fullPath: '/fleet'
+      preLoaderRoute: typeof FleetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -147,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
   ControlRoute: ControlRoute,
+  FleetRoute: FleetRoute,
   HistoryRoute: HistoryRoute,
   LiveRoute: LiveRoute,
   PlannerRoute: PlannerRoute,
