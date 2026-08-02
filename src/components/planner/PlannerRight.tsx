@@ -10,6 +10,8 @@ import {
   RotateCcw,
   Square,
   Sparkles,
+  Brain,
+  GitCompare,
 } from "lucide-react";
 import { Meter, Panel, ScoreRing, Stat, StatusDot } from "@/components/hud/primitives";
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { OPTIMIZATION_STEPS, useMission } from "@/store/mission-store";
 import { formatDuration, formatKm } from "@/lib/mission/planner";
+import { explainRoute } from "@/lib/mission/comparison";
 import { cn } from "@/lib/utils";
 
 export function PlannerRight() {
@@ -49,6 +52,11 @@ export function PlannerRight() {
     resetSimulation,
     config,
     lastReportId,
+    zones,
+    manual,
+    comparison,
+    settings,
+    updateSettings,
   } = useMission();
   const [whyOpen, setWhyOpen] = useState(false);
   const route = routes.find((r) => r.strategy === selectedStrategy) ?? null;
@@ -218,6 +226,73 @@ export function PlannerRight() {
           </div>
         </div>
       </Panel>
+
+      <Panel
+        title="Why did the AI choose this route?"
+        action={<Brain className="h-3.5 w-3.5 text-primary" />}
+      >
+        <ol className="space-y-1.5">
+          {explainRoute(route, config, zones, comparison).map((line, i) => (
+            <li key={i} className="flex gap-2 text-[11.5px] leading-relaxed text-muted-foreground">
+              <span className="label-mono shrink-0 text-primary">{String(i + 1).padStart(2, "0")}</span>
+              <span>{line}</span>
+            </li>
+          ))}
+        </ol>
+      </Panel>
+
+      {manual && comparison && (
+        <Panel
+          title="Manual vs AI Optimized"
+          action={
+            <button
+              className="label-mono hover:text-primary"
+              onClick={() => updateSettings({ showComparison: !settings.showComparison })}
+            >
+              <GitCompare className="mr-1 inline h-3 w-3" />
+              {settings.showComparison ? "Hide on map" : "Show on map"}
+            </button>
+          }
+        >
+          <div className="grid grid-cols-3 gap-1.5 text-center">
+            <div className="rounded-sm border border-border/70 bg-background/40 px-2 py-2">
+              <div className="label-mono">Manual</div>
+              <div className="mt-1 font-mono text-[12px] text-muted-foreground">
+                {formatKm(manual.distance)}
+              </div>
+              <div className="font-mono text-[11px] text-muted-foreground">
+                {formatDuration(manual.duration)}
+              </div>
+              <div className="font-mono text-[11px] text-muted-foreground">
+                {(manual.coverage * 100).toFixed(1)}% cov
+              </div>
+            </div>
+            <div className="rounded-sm border border-primary/50 bg-primary/10 px-2 py-2">
+              <div className="label-mono text-primary">AI Optimized</div>
+              <div className="mt-1 font-mono text-[12px] text-foreground">{formatKm(m.distance)}</div>
+              <div className="font-mono text-[11px] text-foreground">{formatDuration(m.duration)}</div>
+              <div className="font-mono text-[11px] text-foreground">
+                {(m.coverage * 100).toFixed(1)}% cov
+              </div>
+            </div>
+            <div className="rounded-sm border border-success/40 bg-success/10 px-2 py-2">
+              <div className="label-mono text-success">Improvement</div>
+              <div className="mt-1 font-mono text-[12px] text-success">
+                −{comparison.distanceSaved}%
+              </div>
+              <div className="font-mono text-[11px] text-success">−{comparison.timeSaved}% time</div>
+              <div className="font-mono text-[11px] text-success">
+                +{comparison.coverageGain} pts
+              </div>
+            </div>
+          </div>
+          <p className="mt-2 text-[10.5px] leading-snug text-muted-foreground">
+            Baseline is a conventional manual lawnmower pattern with a full boundary lap and no
+            zone awareness ({comparison.conflictsAvoided} simulated zone conflicts avoided by the AI
+            route). Battery saving: {comparison.batterySaved}%.
+          </p>
+        </Panel>
+      )}
 
       <Panel title="Route Alternatives">
         <div className="space-y-1.5">
