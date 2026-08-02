@@ -18,6 +18,7 @@ import { Route as HistoryRouteImport } from './routes/history'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ReportMissionIdRouteImport } from './routes/report.$missionId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportMissionIdRoute = ReportMissionIdRouteImport.update({
+  id: '/report/$missionId',
+  path: '/report/$missionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
+  '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
+  '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
+  '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/live'
     | '/planner'
     | '/settings'
+    | '/report/$missionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/live'
     | '/planner'
     | '/settings'
+    | '/report/$missionId'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/live'
     | '/planner'
     | '/settings'
+    | '/report/$missionId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   LiveRoute: typeof LiveRoute
   PlannerRoute: typeof PlannerRoute
   SettingsRoute: typeof SettingsRoute
+  ReportMissionIdRoute: typeof ReportMissionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/report/$missionId': {
+      id: '/report/$missionId'
+      path: '/report/$missionId'
+      fullPath: '/report/$missionId'
+      preLoaderRoute: typeof ReportMissionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   LiveRoute: LiveRoute,
   PlannerRoute: PlannerRoute,
   SettingsRoute: SettingsRoute,
+  ReportMissionIdRoute: ReportMissionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
