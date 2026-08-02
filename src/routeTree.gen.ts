@@ -13,12 +13,15 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as ControlRouteImport } from './routes/control'
+import { Route as DetectionsRouteImport } from './routes/detections'
 import { Route as EgyptRouteImport } from './routes/egypt'
 import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as HistoryRouteImport } from './routes/history'
+import { Route as ImageryRouteImport } from './routes/imagery'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SystemRouteImport } from './routes/system'
 import { Route as ReportMissionIdRouteImport } from './routes/report.$missionId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +44,11 @@ const ControlRoute = ControlRouteImport.update({
   path: '/control',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DetectionsRoute = DetectionsRouteImport.update({
+  id: '/detections',
+  path: '/detections',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EgyptRoute = EgyptRouteImport.update({
   id: '/egypt',
   path: '/egypt',
@@ -54,6 +62,11 @@ const FleetRoute = FleetRouteImport.update({
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImageryRoute = ImageryRouteImport.update({
+  id: '/imagery',
+  path: '/imagery',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LiveRoute = LiveRouteImport.update({
@@ -71,6 +84,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemRoute = SystemRouteImport.update({
+  id: '/system',
+  path: '/system',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportMissionIdRoute = ReportMissionIdRouteImport.update({
   id: '/report/$missionId',
   path: '/report/$missionId',
@@ -82,12 +100,15 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
+  '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
+  '/system': typeof SystemRoute
   '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRoutesByTo {
@@ -95,12 +116,15 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
+  '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
+  '/system': typeof SystemRoute
   '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRoutesById {
@@ -109,12 +133,15 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
+  '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
+  '/system': typeof SystemRoute
   '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRouteTypes {
@@ -124,12 +151,15 @@ export interface FileRouteTypes {
     | '/about'
     | '/analytics'
     | '/control'
+    | '/detections'
     | '/egypt'
     | '/fleet'
     | '/history'
+    | '/imagery'
     | '/live'
     | '/planner'
     | '/settings'
+    | '/system'
     | '/report/$missionId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -137,12 +167,15 @@ export interface FileRouteTypes {
     | '/about'
     | '/analytics'
     | '/control'
+    | '/detections'
     | '/egypt'
     | '/fleet'
     | '/history'
+    | '/imagery'
     | '/live'
     | '/planner'
     | '/settings'
+    | '/system'
     | '/report/$missionId'
   id:
     | '__root__'
@@ -150,12 +183,15 @@ export interface FileRouteTypes {
     | '/about'
     | '/analytics'
     | '/control'
+    | '/detections'
     | '/egypt'
     | '/fleet'
     | '/history'
+    | '/imagery'
     | '/live'
     | '/planner'
     | '/settings'
+    | '/system'
     | '/report/$missionId'
   fileRoutesById: FileRoutesById
 }
@@ -164,12 +200,15 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AnalyticsRoute: typeof AnalyticsRoute
   ControlRoute: typeof ControlRoute
+  DetectionsRoute: typeof DetectionsRoute
   EgyptRoute: typeof EgyptRoute
   FleetRoute: typeof FleetRoute
   HistoryRoute: typeof HistoryRoute
+  ImageryRoute: typeof ImageryRoute
   LiveRoute: typeof LiveRoute
   PlannerRoute: typeof PlannerRoute
   SettingsRoute: typeof SettingsRoute
+  SystemRoute: typeof SystemRoute
   ReportMissionIdRoute: typeof ReportMissionIdRoute
 }
 
@@ -203,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ControlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/detections': {
+      id: '/detections'
+      path: '/detections'
+      fullPath: '/detections'
+      preLoaderRoute: typeof DetectionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/egypt': {
       id: '/egypt'
       path: '/egypt'
@@ -222,6 +268,13 @@ declare module '@tanstack/react-router' {
       path: '/history'
       fullPath: '/history'
       preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/imagery': {
+      id: '/imagery'
+      path: '/imagery'
+      fullPath: '/imagery'
+      preLoaderRoute: typeof ImageryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/live': {
@@ -245,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/system': {
+      id: '/system'
+      path: '/system'
+      fullPath: '/system'
+      preLoaderRoute: typeof SystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/report/$missionId': {
       id: '/report/$missionId'
       path: '/report/$missionId'
@@ -260,12 +320,15 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AnalyticsRoute: AnalyticsRoute,
   ControlRoute: ControlRoute,
+  DetectionsRoute: DetectionsRoute,
   EgyptRoute: EgyptRoute,
   FleetRoute: FleetRoute,
   HistoryRoute: HistoryRoute,
+  ImageryRoute: ImageryRoute,
   LiveRoute: LiveRoute,
   PlannerRoute: PlannerRoute,
   SettingsRoute: SettingsRoute,
+  SystemRoute: SystemRoute,
   ReportMissionIdRoute: ReportMissionIdRoute,
 }
 export const routeTree = rootRouteImport

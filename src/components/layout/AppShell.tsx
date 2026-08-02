@@ -3,31 +3,70 @@ import type { ReactNode } from "react";
 import {
   Activity,
   BarChart3,
+  Camera,
   Cpu,
+  Crosshair,
+  Gauge,
+  Globe2,
+  HeartPulse,
   History,
   LayoutDashboard,
   Map as MapIcon,
-  Presentation,
   Settings as SettingsIcon,
   ShieldAlert,
-  Globe2,
 } from "lucide-react";
-import { Wordmark } from "@/components/brand/Logo";
 import { useMission } from "@/store/mission-store";
+import { useThemeSync } from "@/lib/theme";
+import { CommandBar } from "@/components/command/CommandBar";
+import { DetectionDetail } from "@/components/detections/DetectionDetail";
+import { ImageViewer } from "@/components/imagery/ImageViewer";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { to: "/control", label: "Mission Control", icon: LayoutDashboard },
-  { to: "/planner", label: "Mission Planner", icon: MapIcon },
-  { to: "/live", label: "Live Mission", icon: Activity },
-  { to: "/history", label: "Mission History", icon: History },
-  { to: "/egypt", label: "Egypt Intelligence", icon: Globe2 },
-  { to: "/analytics", label: "Analytics", icon: BarChart3 },
-  { to: "/fleet", label: "Drone Fleet", icon: Cpu },
-  { to: "/settings", label: "Settings", icon: SettingsIcon },
-] as const;
+type NavItem = { to: string; label: string; icon: typeof Cpu };
+const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
+  {
+    label: "Command",
+    items: [
+      { to: "/control", label: "Mission Control", icon: LayoutDashboard },
+      { to: "/planner", label: "Mission Planner", icon: MapIcon },
+      { to: "/live", label: "Live Mission", icon: Activity },
+    ],
+  },
+  {
+    label: "Intelligence",
+    items: [
+      { to: "/detections", label: "Detections", icon: Crosshair },
+      { to: "/imagery", label: "Aerial Imagery", icon: Camera },
+      { to: "/egypt", label: "Reconnaissance", icon: Globe2 },
+      { to: "/history", label: "Mission History", icon: History },
+      { to: "/analytics", label: "Analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    label: "Fleet",
+    items: [
+      { to: "/fleet", label: "Drone Fleet", icon: Cpu },
+      { to: "/live", label: "Telemetry", icon: Gauge },
+    ],
+  },
+  {
+    label: "System",
+    items: [
+      { to: "/settings", label: "Settings", icon: SettingsIcon },
+      { to: "/system", label: "System Health", icon: HeartPulse },
+    ],
+  },
+];
+
+const SYSTEM_STATUS = [
+  { label: "AI Engine", value: "ONLINE" },
+  { label: "Map Engine", value: "ONLINE" },
+  { label: "Simulation", value: "READY" },
+  { label: "Database", value: "ONLINE" },
+];
 
 export function AppShell({ children }: { children: ReactNode }) {
+  useThemeSync();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const presentation = useMission((s) => s.settings.presentationMode);
   const strategic = useMission((s) => s.settings.strategicMode);
@@ -36,60 +75,70 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-background">
       {!presentation && (
-        <aside className="sticky top-0 hidden h-screen w-[228px] shrink-0 flex-col border-r border-border bg-sidebar md:flex">
-          <div className="border-b border-sidebar-border px-4 py-4">
-            <Link to="/">
-              <Wordmark />
-            </Link>
-          </div>
-          <nav className="flex-1 space-y-0.5 p-2">
-            {NAV.map((item) => {
-              const active = pathname === item.to;
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={cn(
-                    "flex items-center gap-2.5 rounded-sm px-3 py-2 text-[13px] font-medium transition-colors",
-                    active
-                      ? "bg-sidebar-accent text-primary shadow-[inset_2px_0_0_0_var(--primary)]"
-                      : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              );
-            })}
+        <aside className="sticky top-0 hidden h-screen w-[212px] shrink-0 flex-col border-r border-border bg-sidebar md:flex">
+          <nav className="flex-1 space-y-3 overflow-y-auto p-2 pt-3">
+            {NAV_GROUPS.map((group) => (
+              <div key={group.label}>
+                <div className="tac-header px-2 pb-1 text-[8px]">{group.label}</div>
+                <div className="space-y-px">
+                  {group.items.map((item) => {
+                    const active = pathname === item.to;
+                    return (
+                      <Link
+                        key={`${group.label}-${item.to}-${item.label}`}
+                        to={item.to as never}
+                        className={cn(
+                          "flex items-center gap-2 px-2 py-[7px] text-[12px] font-medium tracking-wide transition-colors",
+                          active
+                            ? "bg-sidebar-accent text-primary shadow-[inset_2px_0_0_0_var(--primary)]"
+                            : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground",
+                        )}
+                      >
+                        <item.icon className="h-3.5 w-3.5" />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
-          <div className="border-t border-sidebar-border p-3">
-            <button
-              onClick={() => updateSettings({ presentationMode: true })}
-              className="flex w-full items-center gap-2 rounded-sm border border-border px-3 py-2 text-[12px] font-medium text-foreground transition-colors hover:border-primary/60 hover:text-primary"
-            >
-              <Presentation className="h-3.5 w-3.5" /> Presentation Mode
-            </button>
+
+          <div className="border-t border-sidebar-border p-2">
+            <div className="tac-header pb-1 text-[8px]">System Status</div>
+            <ul className="space-y-1">
+              {SYSTEM_STATUS.map((s) => (
+                <li key={s.label} className="flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                  <span className="tac-value text-[10px] text-muted-foreground">
+                    {s.label.toUpperCase()}
+                  </span>
+                  <span className="tac-value ml-auto text-[10px] text-success">{s.value}</span>
+                </li>
+              ))}
+            </ul>
             <button
               onClick={() => updateSettings({ strategicMode: !strategic })}
               className={cn(
-                "mt-2 flex w-full items-center gap-2 rounded-sm border px-3 py-2 text-[12px] font-medium transition-colors",
+                "mt-2 flex w-full items-center gap-1.5 border px-2 py-1.5 font-mono text-[9px] uppercase tracking-[0.12em] transition-colors",
                 strategic
                   ? "border-warning/60 bg-warning/10 text-warning"
-                  : "border-border text-foreground hover:border-primary/60 hover:text-primary",
+                  : "border-border text-muted-foreground hover:border-primary/60 hover:text-primary",
               )}
             >
-              <ShieldAlert className="h-3.5 w-3.5" /> Strategic Operations Mode
+              <ShieldAlert className="h-3 w-3" /> Strategic Mode
             </button>
-            <p className="label-mono mt-3 leading-relaxed">
-              Simulation Prototype · v1.0
+            <p className="tac-header mt-2 text-[8px] leading-relaxed">
+              Tactical Simulation Environment
               <br />
-              Not connected to a live aircraft
+              Prototype v1.2 · No live aircraft
             </p>
           </div>
         </aside>
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
+        {!presentation && <CommandBar />}
         {strategic && (
           <div className="flex items-center justify-center gap-2 border-b border-warning/40 bg-warning/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-warning">
             <ShieldAlert className="h-3 w-3" />
@@ -99,7 +148,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {presentation && (
           <button
             onClick={() => updateSettings({ presentationMode: false })}
-            className="fixed bottom-4 left-4 z-[900] rounded-sm border border-border bg-panel/90 px-3 py-1.5 text-[11px] uppercase tracking-widest text-muted-foreground backdrop-blur hover:text-primary"
+            className="fixed bottom-4 left-4 z-[900] border border-border bg-panel/90 px-3 py-1.5 text-[11px] uppercase tracking-widest text-muted-foreground backdrop-blur hover:text-primary"
           >
             Exit Presentation Mode
           </button>
@@ -107,19 +156,23 @@ export function AppShell({ children }: { children: ReactNode }) {
         {!presentation && <MobileNav pathname={pathname} />}
         {children}
       </div>
+
+      <DetectionDetail />
+      <ImageViewer />
     </div>
   );
 }
 
 function MobileNav({ pathname }: { pathname: string }) {
+  const items: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
   return (
     <div className="flex gap-1 overflow-x-auto border-b border-border bg-sidebar px-2 py-2 md:hidden">
-      {NAV.map((item) => (
+      {items.map((item) => (
         <Link
-          key={item.to}
-          to={item.to}
+          key={`${item.to}-${item.label}`}
+          to={item.to as never}
           className={cn(
-            "whitespace-nowrap rounded-sm px-3 py-1.5 text-[12px]",
+            "whitespace-nowrap px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider",
             pathname === item.to ? "bg-sidebar-accent text-primary" : "text-muted-foreground",
           )}
         >
