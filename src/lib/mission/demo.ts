@@ -1,10 +1,11 @@
 import { circlePolygon } from "./geo";
+import { EGYPT_LOCATIONS, NAC_AREA, NAC_HOME, NAC_ZONES } from "./egypt";
 import type { DroneSpec, LatLng, MissionRecord, Zone } from "./types";
 
 export const DRONES: DroneSpec[] = [
   {
-    id: "surveyor-x1",
-    model: "Surveyor X1",
+    id: "horus-x1",
+    model: "Horus X1",
     batteryCapacity: 10000,
     cruiseSpeed: 8,
     maxFlightTime: 25,
@@ -19,8 +20,8 @@ export const DRONES: DroneSpec[] = [
     missions: 148,
   },
   {
-    id: "surveyor-x2",
-    model: "Surveyor X2",
+    id: "horus-x2",
+    model: "Horus X2",
     batteryCapacity: 15000,
     cruiseSpeed: 11,
     maxFlightTime: 34,
@@ -35,8 +36,8 @@ export const DRONES: DroneSpec[] = [
     missions: 91,
   },
   {
-    id: "sentinel-t3",
-    model: "Sentinel T3",
+    id: "sinai-t3",
+    model: "Sinai T3",
     batteryCapacity: 12000,
     cruiseSpeed: 9,
     maxFlightTime: 28,
@@ -52,7 +53,7 @@ export const DRONES: DroneSpec[] = [
   },
   {
     id: "custom-rig",
-    model: "Custom Drone",
+    model: "Nile Custom Rig",
     batteryCapacity: 5000,
     cruiseSpeed: 6,
     maxFlightTime: 18,
@@ -68,37 +69,14 @@ export const DRONES: DroneSpec[] = [
   },
 ];
 
-export const DEMO_AREA: LatLng[] = [
-  { lat: 31.2225, lng: 29.9285 },
-  { lat: 31.2268, lng: 29.9465 },
-  { lat: 31.2148, lng: 29.9538 },
-  { lat: 31.2058, lng: 29.9406 },
-  { lat: 31.2104, lng: 29.9282 },
-];
+export const DEMO_AREA: LatLng[] = NAC_AREA;
 
-export const DEMO_ZONES: Zone[] = [
-  {
-    id: "zone-demo-1",
-    name: "Port Control Airspace",
-    kind: "no-fly",
-    polygon: circlePolygon({ lat: 31.2195, lng: 29.9395 }, 380, 28),
-  },
-  {
-    id: "zone-demo-2",
-    name: "Communication Tower",
-    kind: "obstacle",
-    polygon: circlePolygon({ lat: 31.2118, lng: 29.9455 }, 160, 20),
-  },
-];
+export const DEMO_ZONES: Zone[] = NAC_ZONES;
 
-export const DEMO_HOME: LatLng = { lat: 31.2088, lng: 29.9314 };
+export const DEMO_HOME: LatLng = NAC_HOME;
 
-export const LOCATION_PRESETS: Array<{ name: string; center: LatLng; zoom: number }> = [
-  { name: "Alexandria", center: { lat: 31.2156, lng: 29.9553 }, zoom: 13 },
-  { name: "Cairo", center: { lat: 30.0444, lng: 31.2357 }, zoom: 12 },
-  { name: "New Cairo", center: { lat: 30.03, lng: 31.4913 }, zoom: 12 },
-  { name: "Giza", center: { lat: 29.9773, lng: 31.1325 }, zoom: 13 },
-];
+export const LOCATION_PRESETS: Array<{ name: string; center: LatLng; zoom: number }> =
+  EGYPT_LOCATIONS.map((l) => ({ name: l.name, center: l.center, zoom: l.zoom }));
 
 function makeTelemetry(durationSec: number, batteryUsed: number, coverage: number, distanceKm: number) {
   const steps = 24;
@@ -123,11 +101,11 @@ export const DEMO_MISSIONS: MissionRecord[] = [
   {
     id: "MSN-024",
     name: "Mission #024",
-    location: "Agricultural Survey — Alexandria",
+    location: "Infrastructure Survey — New Administrative Capital",
     date: "2026-07-28T08:15:00Z",
     objective: "survey",
-    droneModel: "Surveyor X1",
-    operator: "Cmdr. N. Farouk",
+    droneModel: "Horus X1",
+    operator: "Cmdr. N. Farouk — Cairo Ops",
     areaKm2: 2.84,
     distanceKm: 8.42,
     durationSec: 1122,
@@ -142,18 +120,18 @@ export const DEMO_MISSIONS: MissionRecord[] = [
       { id: "e2", t: 780, level: "warning", title: "Wind Advisory", message: "Moderate wind detected. Route stability reduced." },
     ],
     telemetry: makeTelemetry(1122, 61, 0.97, 8.42),
-    area: polyAround({ lat: 31.2156, lng: 29.9553 }, 900),
+    area: polyAround({ lat: 30.013, lng: 31.748 }, 900),
     path: [],
     zones: [],
   },
   {
     id: "MSN-023",
     name: "Mission #023",
-    location: "Infrastructure Mapping — New Cairo",
+    location: "Smart City Mapping — New Cairo District 3",
     date: "2026-07-24T06:40:00Z",
     objective: "mapping",
-    droneModel: "Surveyor X2",
-    operator: "Cmdr. N. Farouk",
+    droneModel: "Horus X2",
+    operator: "Cmdr. N. Farouk — Cairo Ops",
     areaKm2: 4.12,
     distanceKm: 12.86,
     durationSec: 1584,
@@ -174,11 +152,11 @@ export const DEMO_MISSIONS: MissionRecord[] = [
   {
     id: "MSN-022",
     name: "Mission #022",
-    location: "Structure Inspection — Giza",
+    location: "Corridor Inspection — Giza Access Road 02",
     date: "2026-07-19T15:05:00Z",
     objective: "inspection",
-    droneModel: "Sentinel T3",
-    operator: "Lt. A. Saleh",
+    droneModel: "Sinai T3",
+    operator: "Lt. A. Saleh — Cairo Ops",
     areaKm2: 0.94,
     distanceKm: 3.21,
     durationSec: 486,
@@ -197,11 +175,11 @@ export const DEMO_MISSIONS: MissionRecord[] = [
   {
     id: "MSN-021",
     name: "Mission #021",
-    location: "Search Pattern — Cairo Ring Road",
+    location: "Emergency Assessment — Cairo Ring Road",
     date: "2026-07-12T11:20:00Z",
     objective: "search",
-    droneModel: "Surveyor X1",
-    operator: "Lt. A. Saleh",
+    droneModel: "Horus X1",
+    operator: "Lt. A. Saleh — Cairo Ops",
     areaKm2: 3.36,
     distanceKm: 10.05,
     durationSec: 1338,
@@ -222,11 +200,11 @@ export const DEMO_MISSIONS: MissionRecord[] = [
   {
     id: "MSN-020",
     name: "Mission #020",
-    location: "Coastal Survey — Alexandria West",
+    location: "Environmental Survey — New Alamein Coast",
     date: "2026-07-05T07:00:00Z",
     objective: "survey",
-    droneModel: "Surveyor X2",
-    operator: "Cmdr. N. Farouk",
+    droneModel: "Horus X2",
+    operator: "Cmdr. N. Farouk — Cairo Ops",
     areaKm2: 5.02,
     distanceKm: 15.4,
     durationSec: 1896,
@@ -238,7 +216,7 @@ export const DEMO_MISSIONS: MissionRecord[] = [
     status: "completed",
     events: [],
     telemetry: makeTelemetry(1896, 69, 0.96, 15.4),
-    area: polyAround({ lat: 31.19, lng: 29.88 }, 1250),
+    area: polyAround({ lat: 30.8253, lng: 28.9522 }, 1250),
     path: [],
     zones: [],
   },
