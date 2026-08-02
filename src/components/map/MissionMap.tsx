@@ -116,7 +116,7 @@ function DrawLayer({
   return (
     <>
       {draft.length > 1 && (
-        <Polyline positions={draft.map((p) => [p.lat, p.lng])} pathOptions={{ color, weight: 2, dashArray: "6 6" }} />
+        <Polyline positions={draft.map(ll)} pathOptions={{ color, weight: 2, dashArray: "6 6" }} />
       )}
       {draft.map((p, i) => (
         <Circle
@@ -204,7 +204,7 @@ export default function MissionMap({ height = "100%" }: { height?: string }) {
 
         {area.length > 2 && (
           <Polygon
-            positions={area.map((p) => [p.lat, p.lng])}
+            positions={area.map(ll)}
             pathOptions={{ color: "#38bdf8", weight: 1.5, fillColor: "#38bdf8", fillOpacity: 0.07 }}
           >
             <Tooltip sticky>Survey Area — {(polygonAreaM2(area) / 1e6).toFixed(2)} km²</Tooltip>
@@ -214,7 +214,7 @@ export default function MissionMap({ height = "100%" }: { height?: string }) {
         {zones.map((z) => (
           <Polygon
             key={z.id}
-            positions={z.polygon.map((p) => [p.lat, p.lng])}
+            positions={z.polygon.map(ll)}
             pathOptions={{
               color: ZONE_COLORS[z.kind] ?? "#ef4444",
               weight: 1.5,
@@ -230,16 +230,16 @@ export default function MissionMap({ height = "100%" }: { height?: string }) {
         {route && (
           <>
             <Polyline
-              positions={route.path.map((p) => [p.lat, p.lng])}
+              positions={route.path.map(ll)}
               pathOptions={{ color: "#0ea5e9", weight: 5, opacity: 0.18 }}
             />
             <Polyline
               className="route-dash"
-              positions={route.path.map((p) => [p.lat, p.lng])}
+              positions={route.path.map(ll)}
               pathOptions={{ color: "#38bdf8", weight: 2 }}
             />
             <Polyline
-              positions={route.rthPath.map((p) => [p.lat, p.lng])}
+              positions={route.rthPath.map(ll)}
               pathOptions={{ color: "#4ade80", weight: 2, dashArray: "8 6" }}
             >
               <Tooltip sticky>Return-to-Home path</Tooltip>
