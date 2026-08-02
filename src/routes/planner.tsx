@@ -12,7 +12,8 @@ import { useMission } from "@/store/mission-store";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/planner")({
-  validateSearch: (s: Record<string, unknown>) => ({ demo: s["demo"] === true || s["demo"] === "true" }),
+  validateSearch: (s: Record<string, unknown>): { demo?: boolean } =>
+    s["demo"] === true || s["demo"] === "true" ? { demo: true } : {},
   head: () => ({
     meta: [
       { title: "Mission Planner — DroneRoute AI" },
