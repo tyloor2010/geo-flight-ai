@@ -36,6 +36,8 @@ const TILES: Record<string, { url: string; attr: string }> = {
   },
 };
 
+const ll = (p: LatLng): [number, number] => [p.lat, p.lng];
+
 const ZONE_COLORS: Record<string, string> = {
   "no-fly": "#ef4444",
   restricted: "#f59e0b",
