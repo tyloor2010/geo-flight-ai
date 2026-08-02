@@ -9,6 +9,8 @@ import {
   Map as MapIcon,
   Presentation,
   Settings as SettingsIcon,
+  ShieldAlert,
+  Globe2,
 } from "lucide-react";
 import { Wordmark } from "@/components/brand/Logo";
 import { useMission } from "@/store/mission-store";
@@ -19,6 +21,7 @@ const NAV = [
   { to: "/planner", label: "Mission Planner", icon: MapIcon },
   { to: "/live", label: "Live Mission", icon: Activity },
   { to: "/history", label: "Mission History", icon: History },
+  { to: "/egypt", label: "Egypt Intelligence", icon: Globe2 },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/fleet", label: "Drone Fleet", icon: Cpu },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
@@ -27,6 +30,7 @@ const NAV = [
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const presentation = useMission((s) => s.settings.presentationMode);
+  const strategic = useMission((s) => s.settings.strategicMode);
   const updateSettings = useMission((s) => s.updateSettings);
 
   return (
@@ -65,6 +69,17 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Presentation className="h-3.5 w-3.5" /> Presentation Mode
             </button>
+            <button
+              onClick={() => updateSettings({ strategicMode: !strategic })}
+              className={cn(
+                "mt-2 flex w-full items-center gap-2 rounded-sm border px-3 py-2 text-[12px] font-medium transition-colors",
+                strategic
+                  ? "border-warning/60 bg-warning/10 text-warning"
+                  : "border-border text-foreground hover:border-primary/60 hover:text-primary",
+              )}
+            >
+              <ShieldAlert className="h-3.5 w-3.5" /> Strategic Operations Mode
+            </button>
             <p className="label-mono mt-3 leading-relaxed">
               Simulation Prototype · v1.0
               <br />
@@ -75,6 +90,12 @@ export function AppShell({ children }: { children: ReactNode }) {
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
+        {strategic && (
+          <div className="flex items-center justify-center gap-2 border-b border-warning/40 bg-warning/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-warning">
+            <ShieldAlert className="h-3 w-3" />
+            Simulation / Training Environment — No Classified or Operational Data
+          </div>
+        )}
         {presentation && (
           <button
             onClick={() => updateSettings({ presentationMode: false })}
