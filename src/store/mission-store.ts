@@ -2,6 +2,22 @@ import { create } from "zustand";
 import { DEMO_AREA, DEMO_HOME, DEMO_MISSIONS, DEMO_ZONES, DRONES } from "@/lib/mission/demo";
 import { bearingLabel, pathLength, pointAlongPath, polygonAreaM2, polygonPerimeterM } from "@/lib/mission/geo";
 import { planMission, type PlanFailure } from "@/lib/mission/planner";
+import {
+  EGYPT_LOCATIONS,
+  getLocation,
+  getTemplate,
+  NAC_AREA,
+  NAC_HOME,
+  NAC_ZONES,
+  type EgyptLocationKey,
+  type MissionTemplateId,
+} from "@/lib/mission/egypt";
+import {
+  compareRoutes,
+  planManualRoute,
+  type Comparison,
+  type ManualRoute,
+} from "@/lib/mission/comparison";
 import type {
   DroneSpec,
   LatLng,
@@ -45,10 +61,20 @@ type Settings = {
   safetyAlerts: boolean;
   followDrone: boolean;
   presentationMode: boolean;
+  strategicMode: boolean;
+  smartCityLayer: boolean;
+  showComparison: boolean;
 };
+
+export type MapFocus = { center: LatLng; zoom: number; nonce: number };
 
 type State = {
   missionName: string;
+  locationKey: EgyptLocationKey;
+  templateId: MissionTemplateId | null;
+  focus: MapFocus | null;
+  manual: ManualRoute | null;
+  comparison: Comparison | null;
   area: LatLng[];
   zones: Zone[];
   markers: Marker[];
@@ -92,6 +118,8 @@ type State = {
   updateConfig: (p: Partial<MissionConfig>) => void;
   selectDrone: (id: string) => void;
   updateSettings: (p: Partial<Settings>) => void;
+  setLocation: (key: EgyptLocationKey, opts?: { loadArea?: boolean }) => void;
+  applyTemplate: (id: MissionTemplateId) => void;
   loadDemoMission: () => void;
   generate: () => Promise<void>;
   selectStrategy: (s: RouteStrategy) => void;
@@ -135,17 +163,25 @@ const defaultSettings: Settings = {
   safetyAlerts: true,
   followDrone: true,
   presentationMode: false,
+  strategicMode: false,
+  smartCityLayer: true,
+  showComparison: false,
 };
 
 let simTimer: ReturnType<typeof setInterval> | null = null;
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export const useMission = create<State>((set, get) => ({
-  missionName: "Mission #025 — Untitled Survey",
-  area: [],
-  zones: [],
+  missionName: "NAC Infrastructure Survey — Sector A",
+  locationKey: "nac",
+  templateId: "infrastructure-survey",
+  focus: null,
+  manual: null,
+  comparison: null,
+  area: NAC_AREA,
+  zones: NAC_ZONES,
   markers: [],
-  home: null,
+  home: NAC_HOME,
   drawMode: "none",
   pendingZoneKind: "no-fly",
   config: defaultConfig,
@@ -214,6 +250,8 @@ export const useMission = create<State>((set, get) => ({
       markers: [],
       home: null,
       routes: [],
+      manual: null,
+      comparison: null,
       planStatus: "idle",
       planError: null,
       planStep: 0,
@@ -259,12 +297,58 @@ export const useMission = create<State>((set, get) => ({
         },
       };
     }),
+  setLocation: (key, opts) => {
+    const loc = getLocation(key);
+    set((s) => ({
+      locationKey: key,
+      focus: { center: loc.center, zoom: loc.zoom, nonce: Date.now() },
+      ...(opts?.loadArea === false
+        ? {}
+        : {
+            area: loc.area,
+            zones: loc.zones,
+            home: loc.home,
+            markers: [],
+            routes: [],
+            manual: null,
+            comparison: null,
+            planStatus: "idle" as PlanStatus,
+            planError: null,
+            missionName: `${loc.name} — ${getTemplate(s.templateId ?? "infrastructure-survey").missionPrefix}`,
+          }),
+    }));
+  },
+  applyTemplate: (id) => {
+    const t = getTemplate(id);
+    set((s) => ({
+      templateId: id,
+      missionName: `${getLocation(s.locationKey).name} — ${t.missionPrefix}`,
+      config: {
+        ...s.config,
+        objective: t.objective,
+        altitude: t.altitude,
+        speed: t.speed,
+        sideOverlap: t.sideOverlap,
+        frontOverlap: t.frontOverlap,
+      },
+      routes: [],
+      manual: null,
+      comparison: null,
+      planStatus: "idle",
+      planError: null,
+    }));
+  },
   loadDemoMission: () =>
     set((s) => ({
-      missionName: "ITC DEMO — Alexandria Coastal Survey",
+      missionName: "ITC DEMO — New Administrative Capital Infrastructure Survey",
+      locationKey: "nac",
+      templateId: "infrastructure-survey",
+      focus: { center: getLocation("nac").center, zoom: 14, nonce: Date.now() },
       area: DEMO_AREA,
       zones: DEMO_ZONES,
       home: DEMO_HOME,
+      manual: null,
+      comparison: null,
       markers: [],
       routes: [],
       planStatus: "idle",
@@ -291,9 +375,12 @@ export const useMission = create<State>((set, get) => ({
       set({ planStatus: "error", planError: result });
       return;
     }
+    const manual = planManualRoute(area, zones, config, home);
     set({
       planStatus: "ready",
       routes: result.routes,
+      manual,
+      comparison: manual ? compareRoutes(result.routes[0]!, manual) : null,
       selectedStrategy: result.routes[0]!.strategy,
       simStatus: "idle",
       simElapsed: 0,
@@ -305,7 +392,15 @@ export const useMission = create<State>((set, get) => ({
       telemetry: [],
     });
   },
-  selectStrategy: (s) => set({ selectedStrategy: s, selectedWaypoint: null }),
+  selectStrategy: (strategy) =>
+    set((s) => {
+      const route = s.routes.find((r) => r.strategy === strategy);
+      return {
+        selectedStrategy: strategy,
+        selectedWaypoint: null,
+        comparison: route && s.manual ? compareRoutes(route, s.manual) : s.comparison,
+      };
+    }),
   selectWaypoint: (i) => set({ selectedWaypoint: i }),
 
   startSimulation: () => {
