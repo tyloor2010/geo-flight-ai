@@ -642,7 +642,7 @@ function buildRecord(
     location: `${route.label} — ${s.config.objective.toUpperCase()}`,
     date: new Date().toISOString(),
     objective: s.config.objective,
-    droneModel: s.drones.find((d) => d.id === s.config.droneId)?.model ?? "Surveyor X1",
+    droneModel: s.drones.find((d) => d.id === s.config.droneId)?.model ?? "Horus X1",
     operator: "Cmdr. N. Farouk",
     areaKm2: Math.round((polygonAreaM2(s.area) / 1e6) * 100) / 100,
     distanceKm: Math.round((route.metrics.distance / 1000) * 100) / 100,
