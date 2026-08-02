@@ -39,10 +39,14 @@ export function Wordmark({ compact = false }: { compact?: boolean }) {
         <div className="font-display text-[15px] font-semibold uppercase tracking-[0.18em] text-foreground">
           Drone<span className="text-primary">Route</span> AI
         </div>
+        <div className="label-mono mt-1 text-[9px] text-primary/80">Egypt Edition</div>
         {!compact && (
-          <div className="label-mono mt-1 text-[9px]">Plan Smarter · Fly Safer · Cover More</div>
+          <div className="label-mono mt-1 text-[9px]">
+            Egyptian Drone Intelligence · Plan Smarter · Fly Safer · Cover More
+          </div>
         )}
       </div>
     </div>
   );
 }
+

@@ -13,10 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { polygonAreaM2, polygonPerimeterM } from "@/lib/mission/geo";
-import { LOCATION_PRESETS } from "@/lib/mission/demo";
+import { EGYPT_LOCATIONS, MISSION_TEMPLATES } from "@/lib/mission/egypt";
 import type { MissionObjective, ZoneKind } from "@/lib/mission/types";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 const OBJECTIVES: Array<{ id: MissionObjective; label: string; hint: string }> = [
   { id: "survey", label: "Area Survey", hint: "Maximum coverage of a selected region" },
@@ -49,7 +48,12 @@ export function PlannerLeft() {
     clearMission,
     settings,
     updateSettings,
+    locationKey,
+    setLocation,
+    templateId,
+    applyTemplate,
   } = useMission();
+  const location = EGYPT_LOCATIONS.find((l) => l.key === locationKey) ?? EGYPT_LOCATIONS[0]!;
 
   const areaM2 = area.length > 2 ? polygonAreaM2(area) : 0;
   const perimeter = area.length > 2 ? polygonPerimeterM(area) : 0;
@@ -59,6 +63,53 @@ export function PlannerLeft() {
 
   return (
     <div className="flex h-full flex-col gap-3 overflow-y-auto p-3">
+      <Panel title="Egypt Mission Areas">
+        <div className="grid grid-cols-2 gap-1.5">
+          {EGYPT_LOCATIONS.slice(0, 6).map((l) => (
+            <button
+              key={l.key}
+              onClick={() => setLocation(l.key)}
+              className={cn(
+                "rounded-sm border px-2 py-1.5 text-left transition-colors",
+                l.key === locationKey
+                  ? "border-primary/60 bg-primary/10"
+                  : "border-border/70 hover:border-border hover:bg-secondary/50",
+              )}
+            >
+              <div className="text-[11.5px] font-medium leading-tight text-foreground">{l.name}</div>
+              <div className="label-mono mt-0.5 text-[9px]">{l.region}</div>
+            </button>
+          ))}
+        </div>
+        <div className="label-mono mt-2 flex flex-wrap gap-1">
+          {location.focusAreas.map((f) => (
+            <span key={f} className="rounded-full border border-border/70 px-2 py-0.5 text-[9px]">
+              {f}
+            </span>
+          ))}
+        </div>
+      </Panel>
+
+      <Panel title="Mission Templates">
+        <div className="space-y-1">
+          {MISSION_TEMPLATES.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => applyTemplate(t.id)}
+              className={cn(
+                "w-full rounded-sm border px-2.5 py-1.5 text-left transition-colors",
+                templateId === t.id
+                  ? "border-primary/60 bg-primary/10"
+                  : "border-border/70 hover:border-border hover:bg-secondary/50",
+              )}
+            >
+              <div className="text-[12px] font-medium text-foreground">{t.name}</div>
+              <div className="text-[10.5px] leading-snug text-muted-foreground">{t.description}</div>
+            </button>
+          ))}
+        </div>
+      </Panel>
+
       <Panel title="Survey Area">
         <div className="grid grid-cols-2 gap-1.5">
           <ToolButton active={drawMode === "area"} onClick={() => setDrawMode("area")} icon={Pentagon} label="Draw Polygon" />
@@ -81,20 +132,14 @@ export function PlannerLeft() {
         )}
 
         <div className="mt-3 flex items-center gap-2">
-          <Select
-            value=""
-            onValueChange={(v) => {
-              const preset = LOCATION_PRESETS.find((p) => p.name === v);
-              if (preset) toast.info(`${preset.name} selected`, { description: "Pan the map to the region and draw your survey area." });
-            }}
-          >
+          <Select value={locationKey} onValueChange={(v) => setLocation(v as never)}>
             <SelectTrigger className="h-8 flex-1 text-[12px]">
-              <SelectValue placeholder="Search location…" />
+              <SelectValue placeholder="Egypt mission area…" />
             </SelectTrigger>
             <SelectContent>
-              {LOCATION_PRESETS.map((p) => (
-                <SelectItem key={p.name} value={p.name}>
-                  {p.name}
+              {EGYPT_LOCATIONS.map((l) => (
+                <SelectItem key={l.key} value={l.key}>
+                  {l.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -103,6 +148,9 @@ export function PlannerLeft() {
             <Trash2 className="h-3.5 w-3.5" />
           </Button>
         </div>
+        <p className="mt-2 text-[10.5px] leading-snug text-muted-foreground">
+          {location.region} — {location.summary}
+        </p>
       </Panel>
 
       <Panel title="Restricted Airspace">
