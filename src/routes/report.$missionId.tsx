@@ -3,6 +3,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Panel, Stat } from "@/components/hud/primitives";
 import { Button } from "@/components/ui/button";
 import { DEMO_MISSIONS } from "@/lib/mission/demo";
+import type { MissionEvent } from "@/lib/mission/types";
 
 export const Route = createFileRoute("/report/$missionId")({
   loader: ({ params }) => {
@@ -48,7 +49,7 @@ function Report() {
         </div>
         <Panel title="Event Log">
           <div className="space-y-1.5">
-            {m.events.map((e) => (
+            {m.events.map((e: MissionEvent) => (
               <div key={e.id} className="rounded-sm border border-border/70 bg-background/40 px-2.5 py-1.5">
                 <div className="flex items-center justify-between text-[12px] text-foreground">
                   {e.title}
