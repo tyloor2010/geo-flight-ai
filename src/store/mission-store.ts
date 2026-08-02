@@ -3,7 +3,6 @@ import { DEMO_AREA, DEMO_HOME, DEMO_MISSIONS, DEMO_ZONES, DRONES } from "@/lib/m
 import { bearingLabel, pathLength, pointAlongPath, polygonAreaM2, polygonPerimeterM } from "@/lib/mission/geo";
 import { planMission, type PlanFailure } from "@/lib/mission/planner";
 import {
-  EGYPT_LOCATIONS,
   getLocation,
   getTemplate,
   NAC_AREA,
