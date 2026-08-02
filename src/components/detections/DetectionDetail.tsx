@@ -36,16 +36,12 @@ export function DetectionDetail() {
   return (
     <Dialog open onOpenChange={(o) => !o && select(null)}>
       <DialogContent
-        showCloseButton={false}
         className="max-w-5xl gap-0 overflow-hidden border-border bg-panel p-0"
       >
         <div className="flex items-center justify-between border-b border-border px-3 py-2">
           <DialogTitle className="tac-header text-foreground/80">
             Detection Intelligence · {detection.id}
           </DialogTitle>
-          <button onClick={() => select(null)} className="text-muted-foreground hover:text-foreground">
-            <X className="h-4 w-4" />
-          </button>
         </div>
 
         <div className="grid max-h-[78vh] gap-0 overflow-y-auto md:grid-cols-[minmax(0,1fr)_300px]">
