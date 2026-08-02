@@ -16,17 +16,17 @@ import { Panel } from "@/components/hud/primitives";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DroneRoute AI — AI-Powered Drone Mission Planning" },
+      { title: "DroneRoute AI Egypt — Smart Drone Mission Planning" },
       {
         name: "description",
         content:
-          "Turn a survey area into an optimized autonomous drone flight mission: AI route optimization, safety-aware planning, battery estimation and live mission simulation.",
+          "Egyptian AI drone mission planning for smart cities and national infrastructure: route optimization, safety-aware planning, battery estimation and live mission simulation.",
       },
-      { property: "og:title", content: "DroneRoute AI — Plan Smarter. Fly Safer. Cover More." },
+      { property: "og:title", content: "DroneRoute AI Egypt — Plan Smarter. Fly Safer. Cover More." },
       {
         property: "og:description",
         content:
-          "AI-powered drone mission planning: coverage grids, restricted airspace avoidance, battery modelling and mission simulation.",
+          "AI drone mission planning built around Egypt's smart cities, New Administrative Capital and national infrastructure programmes.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -35,16 +35,18 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
+import { APPLICATION_AREAS, EGYPT_DEMO_STATS } from "@/lib/mission/egypt";
+
 const CAPABILITIES = [
   {
     icon: Brain,
     title: "AI Route Optimization",
-    text: "Automatically calculate efficient coverage flight paths from a drawn survey area.",
+    text: "Efficient coverage flight paths generated from any Egyptian survey area in seconds.",
   },
   {
     icon: ShieldCheck,
     title: "Safety-Aware Planning",
-    text: "Respect operator-declared restricted zones, obstacles and operational limits.",
+    text: "Operator-declared restricted zones, obstacles and safety limits are honoured as hard constraints.",
   },
   {
     icon: Radar,
@@ -71,6 +73,7 @@ function Landing() {
           <nav className="hidden items-center gap-6 text-[13px] text-muted-foreground md:flex">
             <a href="#capabilities" className="hover:text-foreground">Capabilities</a>
             <a href="#how" className="hover:text-foreground">How it works</a>
+            <Link to="/egypt" className="hover:text-foreground">Egypt Intelligence</Link>
             <Link to="/about" className="hover:text-foreground">Technology</Link>
             <Link to="/control" className="hover:text-foreground">Mission Control</Link>
           </nav>
@@ -110,17 +113,22 @@ function Landing() {
         <div className="relative mx-auto max-w-7xl px-5 py-24 md:py-32">
           <div className="max-w-2xl animate-rise-in">
             <span className="label-mono rounded-full border border-primary/40 px-3 py-1 text-primary">
-              AI-Powered Autonomous Drone Mission Planning
+Egyptian Technology · Smart Cities · Autonomous Aerial Missions
             </span>
             <h1 className="mt-6 font-display text-5xl font-bold uppercase leading-[1.05] tracking-tight text-foreground md:text-7xl">
               Drone<span className="text-primary">Route</span> AI
+              <span className="mt-2 block text-2xl font-semibold tracking-[0.12em] text-primary md:text-3xl">
+                Egypt Edition
+              </span>
             </h1>
             <p className="mt-4 font-display text-xl uppercase tracking-[0.2em] text-muted-foreground">
-              Plan Smarter. Fly Safer. Cover More.
+              Egypt's Smart Infrastructure, Mapped From Above.
             </p>
             <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground">
-              Turn a survey area into an optimized autonomous flight mission. The operator defines
-              what must be covered — DroneRoute AI determines how the aircraft should fly it.
+              An AI-powered drone mission planning platform designed for Egypt's smart cities,
+              national infrastructure programmes and emergency response teams. The operator defines
+              what must be covered — DroneRoute AI determines how the aircraft should fly it, from
+              the New Administrative Capital to New Alamein.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" asChild>
@@ -133,7 +141,7 @@ function Landing() {
               </Button>
             </div>
             <p className="mt-6 text-[11px] uppercase tracking-widest text-muted-foreground/70">
-              Simulation prototype — not connected to a physical aircraft
+Simulation prototype · fictional demo zones · no classified, military or operational airspace data
             </p>
           </div>
         </div>
@@ -181,11 +189,71 @@ function Landing() {
         </div>
       </section>
 
+      <section className="border-y border-border bg-panel/40 py-14">
+        <div className="mx-auto max-w-7xl px-5">
+          <h2 className="font-display text-3xl uppercase tracking-wide text-foreground">
+            Simulated National Coverage
+          </h2>
+          <p className="mt-2 max-w-2xl text-[13px] text-muted-foreground">
+            Aggregate results from DroneRoute AI's Egyptian demonstration scenarios.
+          </p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            {EGYPT_DEMO_STATS.map((s) => (
+              <div key={s.label} className="glass-panel rounded-md p-4">
+                <div className="font-display text-2xl font-semibold text-primary">{s.value}</div>
+                <div className="label-mono mt-1 leading-snug">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 py-20">
+        <h2 className="font-display text-3xl uppercase tracking-wide text-foreground">
+          Application Areas
+        </h2>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {APPLICATION_AREAS.map((a) => (
+            <Panel key={a.title} className="p-5">
+              <h3 className="text-[15px] font-semibold text-foreground">{a.title}</h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">{a.text}</p>
+            </Panel>
+          ))}
+        </div>
+      </section>
+
+      <section className="border-t border-border bg-panel/30 py-20">
+        <div className="mx-auto max-w-3xl px-5 text-center">
+          <h2 className="font-display text-3xl uppercase tracking-wide text-foreground">
+            Built for Egypt. Scalable Beyond.
+          </h2>
+          <p className="mt-5 text-[15px] leading-relaxed text-muted-foreground">
+            Egypt is building new cities, transport corridors and national infrastructure at
+            extraordinary speed. Aerial survey has become essential — yet mission planning is still
+            largely manual, slow and error-prone. DroneRoute AI converts an operator-defined area
+            into an optimized, safety-aware autonomous mission in seconds, then simulates it end to
+            end before a single propeller turns.
+          </p>
+          <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+            The same engine scales from one construction site to a governorate-level programme — and
+            from Egypt to the wider MENA region.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button size="lg" asChild>
+              <Link to="/planner" search={{ demo: true }}>Run the Egypt Demo</Link>
+            </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/egypt">Egypt Mission Intelligence</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-border py-10">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Logo size={20} className="text-primary" />
-            <span className="text-[13px]">DroneRoute AI · ITC Prototype</span>
+            <span className="text-[13px]">DroneRoute AI Egypt · ITC Prototype</span>
           </div>
           <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
             <Link to="/about" className="hover:text-foreground">About the Technology</Link>

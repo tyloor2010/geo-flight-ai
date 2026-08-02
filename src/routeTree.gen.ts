@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as ControlRouteImport } from './routes/control'
+import { Route as EgyptRouteImport } from './routes/egypt'
 import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as LiveRouteImport } from './routes/live'
@@ -38,6 +39,11 @@ const AnalyticsRoute = AnalyticsRouteImport.update({
 const ControlRoute = ControlRouteImport.update({
   id: '/control',
   path: '/control',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EgyptRoute = EgyptRouteImport.update({
+  id: '/egypt',
+  path: '/egypt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FleetRoute = FleetRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
+  '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/analytics'
     | '/control'
+    | '/egypt'
     | '/fleet'
     | '/history'
     | '/live'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/analytics'
     | '/control'
+    | '/egypt'
     | '/fleet'
     | '/history'
     | '/live'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/analytics'
     | '/control'
+    | '/egypt'
     | '/fleet'
     | '/history'
     | '/live'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AnalyticsRoute: typeof AnalyticsRoute
   ControlRoute: typeof ControlRoute
+  EgyptRoute: typeof EgyptRoute
   FleetRoute: typeof FleetRoute
   HistoryRoute: typeof HistoryRoute
   LiveRoute: typeof LiveRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/control'
       fullPath: '/control'
       preLoaderRoute: typeof ControlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/egypt': {
+      id: '/egypt'
+      path: '/egypt'
+      fullPath: '/egypt'
+      preLoaderRoute: typeof EgyptRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fleet': {
@@ -240,6 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AnalyticsRoute: AnalyticsRoute,
   ControlRoute: ControlRoute,
+  EgyptRoute: EgyptRoute,
   FleetRoute: FleetRoute,
   HistoryRoute: HistoryRoute,
   LiveRoute: LiveRoute,
