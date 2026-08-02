@@ -22,7 +22,8 @@ import { DetectionDetail } from "@/components/detections/DetectionDetail";
 import { ImageViewer } from "@/components/imagery/ImageViewer";
 import { cn } from "@/lib/utils";
 
-const NAV_GROUPS = [
+type NavItem = { to: string; label: string; icon: typeof Cpu };
+const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
   {
     label: "Command",
     items: [
@@ -55,7 +56,7 @@ const NAV_GROUPS = [
       { to: "/system", label: "System Health", icon: HeartPulse },
     ],
   },
-] as const;
+];
 
 const SYSTEM_STATUS = [
   { label: "AI Engine", value: "ONLINE" },
@@ -85,7 +86,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     return (
                       <Link
                         key={`${group.label}-${item.to}-${item.label}`}
-                        to={item.to}
+                        to={item.to as never}
                         className={cn(
                           "flex items-center gap-2 px-2 py-[7px] text-[12px] font-medium tracking-wide transition-colors",
                           active
@@ -163,13 +164,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function MobileNav({ pathname }: { pathname: string }) {
-  const items = NAV_GROUPS.flatMap((g) => g.items);
+  const items: NavItem[] = NAV_GROUPS.flatMap((g) => g.items);
   return (
     <div className="flex gap-1 overflow-x-auto border-b border-border bg-sidebar px-2 py-2 md:hidden">
       {items.map((item) => (
         <Link
           key={`${item.to}-${item.label}`}
-          to={item.to}
+          to={item.to as never}
           className={cn(
             "whitespace-nowrap px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-wider",
             pathname === item.to ? "bg-sidebar-accent text-primary" : "text-muted-foreground",
