@@ -62,12 +62,13 @@
 
 :root {
   --radius: 0.25rem;
-  --background: oklch(0.16 0.008 250);
-  --foreground: oklch(0.96 0.004 250);
-  --card: oklch(0.203 0.009 250);
-  --card-foreground: oklch(0.96 0.004 250);
-  --panel: oklch(0.187 0.009 250);
-  --panel-foreground: oklch(0.96 0.004 250);
+  --background: oklch(0.128 0.008 150);
+  --foreground: oklch(0.95 0.006 150);
+  --card: oklch(0.172 0.008 150);
+  --card-foreground: oklch(0.95 0.006 150);
+  --panel: oklch(0.158 0.008 150);
+  --panel-foreground: oklch(0.95 0.006 150);
+
   --popover: oklch(0.203 0.009 250);
   --popover-foreground: oklch(0.96 0.004 250);
   --primary: oklch(0.78 0.14 205);
