@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as ControlRouteImport } from './routes/control'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as LiveRouteImport } from './routes/live'
@@ -18,6 +19,11 @@ import { Route as PlannerRouteImport } from './routes/planner'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ControlRoute = ControlRouteImport.update({
@@ -43,6 +49,7 @@ const PlannerRoute = PlannerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
   '/control': typeof ControlRoute
   '/history': typeof HistoryRoute
   '/live': typeof LiveRoute
@@ -65,14 +74,22 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/control' | '/history' | '/live' | '/planner'
+  fullPaths: '/' | '/analytics' | '/control' | '/history' | '/live' | '/planner'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/control' | '/history' | '/live' | '/planner'
-  id: '__root__' | '/' | '/control' | '/history' | '/live' | '/planner'
+  to: '/' | '/analytics' | '/control' | '/history' | '/live' | '/planner'
+  id:
+    | '__root__'
+    | '/'
+    | '/analytics'
+    | '/control'
+    | '/history'
+    | '/live'
+    | '/planner'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   ControlRoute: typeof ControlRoute
   HistoryRoute: typeof HistoryRoute
   LiveRoute: typeof LiveRoute
@@ -86,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/control': {
@@ -121,6 +145,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
   ControlRoute: ControlRoute,
   HistoryRoute: HistoryRoute,
   LiveRoute: LiveRoute,
