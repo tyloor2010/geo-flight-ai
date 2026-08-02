@@ -14,6 +14,7 @@ import {
 import { Check, X } from "lucide-react";
 import { useMission } from "@/store/mission-store";
 import { polygonAreaM2 } from "@/lib/mission/geo";
+import { getLocation, smartCityFeatures } from "@/lib/mission/egypt";
 import type { LatLng } from "@/lib/mission/types";
 import { Button } from "@/components/ui/button";
 
@@ -135,8 +136,13 @@ function DrawLayer({
 function MapController({ follow }: { follow: LatLng | null }) {
   const map = useMap();
   const area = useMission((s) => s.area);
+  const focus = useMission((s) => s.focus);
   const followDrone = useMission((s) => s.settings.followDrone);
   const simStatus = useMission((s) => s.simStatus);
+
+  useEffect(() => {
+    if (focus) map.flyTo([focus.center.lat, focus.center.lng], focus.zoom, { duration: 1.1 });
+  }, [focus, map]);
 
   useEffect(() => {
     if (area.length > 2) {
@@ -186,9 +192,17 @@ export default function MissionMap({ height = "100%" }: { height?: string }) {
     return route.waypoints.filter((_, i) => i % step === 0);
   }, [route]);
 
+  const locationKey = useMission((s) => s.locationKey);
+  const manual = useMission((s) => s.manual);
+  const location = getLocation(locationKey);
+  const city = useMemo(
+    () => (location.smartCity && settings.smartCityLayer ? smartCityFeatures(location.center) : null),
+    [location, settings.smartCityLayer],
+  );
+
   const center: [number, number] = area.length
     ? [area[0]!.lat, area[0]!.lng]
-    : [31.2156, 29.9553];
+    : [location.center.lat, location.center.lng];
 
   return (
     <div className="relative h-full w-full" style={{ height }}>
@@ -203,6 +217,48 @@ export default function MissionMap({ height = "100%" }: { height?: string }) {
         <TileLayer url={tiles.url} attribution={tiles.attr} />
         <MapController follow={simPosition} />
         <DrawLayer draft={draft} setDraft={setDraft} />
+
+        {city && (
+          <>
+            {city.roads.map((r, i) => (
+              <Polyline
+                key={`road-${i}`}
+                positions={r.map(ll)}
+                pathOptions={{ color: "#64748b", weight: 1, opacity: 0.45 }}
+              />
+            ))}
+            <Polyline
+              positions={city.corridor.map(ll)}
+              pathOptions={{ color: "#f59e0b", weight: 2.5, opacity: 0.55, dashArray: "10 6" }}
+            >
+              <Tooltip sticky>Smart Corridor 04 — simulated infrastructure layer</Tooltip>
+            </Polyline>
+            {city.buildings.map((b) => (
+              <Polygon
+                key={b.id}
+                positions={b.polygon.map(ll)}
+                pathOptions={{
+                  color: "#94a3b8",
+                  weight: 0.8,
+                  fillColor: "#38bdf8",
+                  fillOpacity: 0.08,
+                  opacity: 0.5,
+                }}
+              >
+                <Tooltip sticky>{`${b.label} · ~${b.height} m (simulated)`}</Tooltip>
+              </Polygon>
+            ))}
+          </>
+        )}
+
+        {settings.showComparison && manual && (
+          <Polyline
+            positions={manual.path.map(ll)}
+            pathOptions={{ color: "#f87171", weight: 1.5, opacity: 0.7, dashArray: "4 6" }}
+          >
+            <Tooltip sticky>Conventional manual flight pattern (baseline)</Tooltip>
+          </Polyline>
+        )}
 
         {area.length > 2 && (
           <Polygon
