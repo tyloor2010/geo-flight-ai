@@ -20,6 +20,7 @@ import { useThemeSync } from "@/lib/theme";
 import { CommandBar } from "@/components/command/CommandBar";
 import { DetectionDetail } from "@/components/detections/DetectionDetail";
 import { ImageViewer } from "@/components/imagery/ImageViewer";
+import { DeveloperCredit } from "@/components/brand/DeveloperCredit";
 import { cn } from "@/lib/utils";
 
 type NavItem = { to: string; label: string; icon: typeof Cpu };
@@ -133,6 +134,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <br />
               Prototype v1.2 · No live aircraft
             </p>
+            <div className="mt-3 border-t border-sidebar-border pt-3">
+              <DeveloperCredit />
+            </div>
           </div>
         </aside>
       )}
@@ -154,7 +158,17 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         )}
         {!presentation && <MobileNav pathname={pathname} />}
-        {children}
+        <main className="flex-1">{children}</main>
+        {!presentation && (
+          <footer className="border-t border-border bg-background px-4 py-2.5">
+            <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <DeveloperCredit />
+              <div className="text-[10px] text-muted-foreground">
+                DroneRoute AI Egypt · ITC Prototype · Simulation Only
+              </div>
+            </div>
+          </footer>
+        )}
       </div>
 
       <DetectionDetail />
