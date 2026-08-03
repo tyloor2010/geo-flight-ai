@@ -120,6 +120,8 @@ type State = {
   setLocation: (key: EgyptLocationKey, opts?: { loadArea?: boolean }) => void;
   applyTemplate: (id: MissionTemplateId) => void;
   loadDemoMission: () => void;
+  applySuggestion: (action: string) => void;
+
   generate: () => Promise<void>;
   selectStrategy: (s: RouteStrategy) => void;
   selectWaypoint: (i: number | null) => void;
