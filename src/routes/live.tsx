@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { MapCanvas } from "@/components/map/MapCanvas";
+import { DroneCamera } from "@/components/live/DroneCamera";
+import { ReplanPanel } from "@/components/mission/ReplanPanel";
+
 import { Meter, Panel, Stat, StatusDot } from "@/components/hud/primitives";
 import { useMission } from "@/store/mission-store";
 import { formatDuration, formatKm } from "@/lib/mission/planner";
