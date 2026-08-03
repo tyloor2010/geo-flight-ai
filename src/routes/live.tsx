@@ -3,6 +3,8 @@ import { AppShell } from "@/components/layout/AppShell";
 import { MapCanvas } from "@/components/map/MapCanvas";
 import { DroneCamera } from "@/components/live/DroneCamera";
 import { ReplanPanel } from "@/components/mission/ReplanPanel";
+import { MissionBrief } from "@/components/mission/MissionBrief";
+import { MissionScorePanel } from "@/components/mission/MissionScore";
 
 import { Meter, Panel, Stat, StatusDot } from "@/components/hud/primitives";
 import { useMission } from "@/store/mission-store";
@@ -35,6 +37,7 @@ function Live() {
           <DroneCamera className="h-full w-full" />
         </div>
         <div className="space-y-3 overflow-y-auto p-3">
+          {s.simStatus === "idle" && <MissionBrief />}
           <ReplanPanel />
 
           <Panel
@@ -88,6 +91,11 @@ function Live() {
           </Panel>
         </div>
       </div>
+      {s.simStatus === "complete" && (
+        <div className="p-3">
+          <MissionScorePanel />
+        </div>
+      )}
     </AppShell>
   );
 }
