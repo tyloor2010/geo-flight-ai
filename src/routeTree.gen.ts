@@ -12,14 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as ChangeDetectionRouteImport } from './routes/change-detection'
 import { Route as ControlRouteImport } from './routes/control'
 import { Route as DetectionsRouteImport } from './routes/detections'
 import { Route as EgyptRouteImport } from './routes/egypt'
 import { Route as FleetRouteImport } from './routes/fleet'
+import { Route as FleetOpsRouteImport } from './routes/fleet-ops'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as ImageryRouteImport } from './routes/imagery'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as PlannerRouteImport } from './routes/planner'
+import { Route as ReplayRouteImport } from './routes/replay'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as VisiontrackRouteImport } from './routes/visiontrack'
@@ -38,6 +41,11 @@ const AboutRoute = AboutRouteImport.update({
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangeDetectionRoute = ChangeDetectionRouteImport.update({
+  id: '/change-detection',
+  path: '/change-detection',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ControlRoute = ControlRouteImport.update({
@@ -60,6 +68,11 @@ const FleetRoute = FleetRouteImport.update({
   path: '/fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FleetOpsRoute = FleetOpsRouteImport.update({
+  id: '/fleet-ops',
+  path: '/fleet-ops',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -78,6 +91,11 @@ const LiveRoute = LiveRouteImport.update({
 const PlannerRoute = PlannerRouteImport.update({
   id: '/planner',
   path: '/planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReplayRoute = ReplayRouteImport.update({
+  id: '/replay',
+  path: '/replay',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -105,14 +123,17 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
+  '/change-detection': typeof ChangeDetectionRoute
   '/control': typeof ControlRoute
   '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
+  '/fleet-ops': typeof FleetOpsRoute
   '/history': typeof HistoryRoute
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
+  '/replay': typeof ReplayRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
   '/visiontrack': typeof VisiontrackRoute
@@ -122,14 +143,17 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
+  '/change-detection': typeof ChangeDetectionRoute
   '/control': typeof ControlRoute
   '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
+  '/fleet-ops': typeof FleetOpsRoute
   '/history': typeof HistoryRoute
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
+  '/replay': typeof ReplayRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
   '/visiontrack': typeof VisiontrackRoute
@@ -140,14 +164,17 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/analytics': typeof AnalyticsRoute
+  '/change-detection': typeof ChangeDetectionRoute
   '/control': typeof ControlRoute
   '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
+  '/fleet-ops': typeof FleetOpsRoute
   '/history': typeof HistoryRoute
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
+  '/replay': typeof ReplayRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
   '/visiontrack': typeof VisiontrackRoute
@@ -159,14 +186,17 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analytics'
+    | '/change-detection'
     | '/control'
     | '/detections'
     | '/egypt'
     | '/fleet'
+    | '/fleet-ops'
     | '/history'
     | '/imagery'
     | '/live'
     | '/planner'
+    | '/replay'
     | '/settings'
     | '/system'
     | '/visiontrack'
@@ -176,14 +206,17 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analytics'
+    | '/change-detection'
     | '/control'
     | '/detections'
     | '/egypt'
     | '/fleet'
+    | '/fleet-ops'
     | '/history'
     | '/imagery'
     | '/live'
     | '/planner'
+    | '/replay'
     | '/settings'
     | '/system'
     | '/visiontrack'
@@ -193,14 +226,17 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/analytics'
+    | '/change-detection'
     | '/control'
     | '/detections'
     | '/egypt'
     | '/fleet'
+    | '/fleet-ops'
     | '/history'
     | '/imagery'
     | '/live'
     | '/planner'
+    | '/replay'
     | '/settings'
     | '/system'
     | '/visiontrack'
@@ -211,14 +247,17 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AnalyticsRoute: typeof AnalyticsRoute
+  ChangeDetectionRoute: typeof ChangeDetectionRoute
   ControlRoute: typeof ControlRoute
   DetectionsRoute: typeof DetectionsRoute
   EgyptRoute: typeof EgyptRoute
   FleetRoute: typeof FleetRoute
+  FleetOpsRoute: typeof FleetOpsRoute
   HistoryRoute: typeof HistoryRoute
   ImageryRoute: typeof ImageryRoute
   LiveRoute: typeof LiveRoute
   PlannerRoute: typeof PlannerRoute
+  ReplayRoute: typeof ReplayRoute
   SettingsRoute: typeof SettingsRoute
   SystemRoute: typeof SystemRoute
   VisiontrackRoute: typeof VisiontrackRoute
@@ -246,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/analytics'
       fullPath: '/analytics'
       preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/change-detection': {
+      id: '/change-detection'
+      path: '/change-detection'
+      fullPath: '/change-detection'
+      preLoaderRoute: typeof ChangeDetectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/control': {
@@ -276,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FleetRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fleet-ops': {
+      id: '/fleet-ops'
+      path: '/fleet-ops'
+      fullPath: '/fleet-ops'
+      preLoaderRoute: typeof FleetOpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -302,6 +355,13 @@ declare module '@tanstack/react-router' {
       path: '/planner'
       fullPath: '/planner'
       preLoaderRoute: typeof PlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/replay': {
+      id: '/replay'
+      path: '/replay'
+      fullPath: '/replay'
+      preLoaderRoute: typeof ReplayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -339,14 +399,17 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AnalyticsRoute: AnalyticsRoute,
+  ChangeDetectionRoute: ChangeDetectionRoute,
   ControlRoute: ControlRoute,
   DetectionsRoute: DetectionsRoute,
   EgyptRoute: EgyptRoute,
   FleetRoute: FleetRoute,
+  FleetOpsRoute: FleetOpsRoute,
   HistoryRoute: HistoryRoute,
   ImageryRoute: ImageryRoute,
   LiveRoute: LiveRoute,
   PlannerRoute: PlannerRoute,
+  ReplayRoute: ReplayRoute,
   SettingsRoute: SettingsRoute,
   SystemRoute: SystemRoute,
   VisiontrackRoute: VisiontrackRoute,

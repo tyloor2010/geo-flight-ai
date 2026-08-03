@@ -1,6 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/layout/AppShell";
 import { MapCanvas } from "@/components/map/MapCanvas";
+import { DroneCamera } from "@/components/live/DroneCamera";
+import { ReplanPanel } from "@/components/mission/ReplanPanel";
+import { MissionBrief } from "@/components/mission/MissionBrief";
+import { MissionScorePanel } from "@/components/mission/MissionScore";
+
 import { Meter, Panel, Stat, StatusDot } from "@/components/hud/primitives";
 import { useMission } from "@/store/mission-store";
 import { formatDuration, formatKm } from "@/lib/mission/planner";
@@ -25,10 +30,16 @@ function Live() {
   return (
     <AppShell>
       <div className="grid min-h-[calc(100vh-0px)] grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="min-h-[400px] border-r border-border">
-          <MapCanvas />
+        <div className="grid min-h-[400px] grid-rows-2 border-r border-border">
+          <div className="border-b border-border">
+            <MapCanvas />
+          </div>
+          <DroneCamera className="h-full w-full" />
         </div>
         <div className="space-y-3 overflow-y-auto p-3">
+          {s.simStatus === "idle" && <MissionBrief />}
+          <ReplanPanel />
+
           <Panel
             title="Drone Status"
             action={<StatusDot tone={s.simStatus === "running" ? "warning" : "success"} label={s.simStatus} pulse={s.simStatus === "running"} />}
@@ -80,6 +91,11 @@ function Live() {
           </Panel>
         </div>
       </div>
+      {s.simStatus === "complete" && (
+        <div className="p-3">
+          <MissionScorePanel />
+        </div>
+      )}
     </AppShell>
   );
 }

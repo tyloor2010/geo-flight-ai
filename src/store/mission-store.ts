@@ -17,6 +17,15 @@ import {
   type Comparison,
   type ManualRoute,
 } from "@/lib/mission/comparison";
+import {
+  buildReplanDecision,
+  REPLAN_STAGES,
+  simulatedObstacle,
+  snapshotRoute,
+  type AiDecision,
+  type RouteSnapshot,
+} from "@/lib/mission/intel";
+
 import type {
   DroneSpec,
   LatLng,
@@ -104,6 +113,18 @@ type State = {
   history: MissionRecord[];
   lastReportId: string | null;
   demoRunning: boolean;
+
+  /** Autonomous in-flight replanning (simulated) */
+  replanStage: number;
+  replanning: boolean;
+  originalSnapshot: RouteSnapshot | null;
+  adaptedSnapshot: RouteSnapshot | null;
+  originalPath: LatLng[] | null;
+  aiDecision: AiDecision | null;
+  adaptations: number;
+  triggerObstacle: () => Promise<void>;
+  clearAdaptation: () => void;
+
 
   setMissionName: (v: string) => void;
   setDrawMode: (m: DrawMode) => void;
@@ -208,6 +229,109 @@ export const useMission = create<State>((set, get) => ({
   telemetry: [],
   history: DEMO_MISSIONS,
   lastReportId: null,
+
+  replanStage: -1,
+  replanning: false,
+  originalSnapshot: null,
+  adaptedSnapshot: null,
+  originalPath: null,
+  aiDecision: null,
+  adaptations: 0,
+
+  clearAdaptation: () =>
+    set({
+      replanStage: -1,
+      replanning: false,
+      originalSnapshot: null,
+      adaptedSnapshot: null,
+      originalPath: null,
+      aiDecision: null,
+    }),
+
+  triggerObstacle: async () => {
+    const s = get();
+    const route = s.routes.find((r) => r.strategy === s.selectedStrategy);
+    if (!route || s.replanning) return;
+
+    const remaining = Math.max(0, route.metrics.distance - route.metrics.rthDistance - s.simDistance);
+    const at = s.simDistance + Math.max(120, remaining * 0.25);
+    const { point } = pointAlongPath(route.path, Math.min(at, route.metrics.distance - route.metrics.rthDistance));
+    const obstacle = simulatedObstacle(point);
+    const before = snapshotRoute(route, "Original Route");
+
+    set((st) => ({
+      replanning: true,
+      replanStage: 0,
+      originalSnapshot: before,
+      originalPath: route.path,
+      adaptedSnapshot: null,
+      aiDecision: null,
+      zones: [...st.zones, obstacle],
+      events: [
+        ...st.events,
+        {
+          id: `ev-obstacle-${Date.now()}`,
+          t: Math.round(st.simElapsed),
+          level: "critical",
+          title: "Obstacle Detected",
+          message: "Simulated obstacle reported on the active corridor. Autonomous replanning engaged.",
+        },
+      ],
+    }));
+
+    for (let i = 0; i < REPLAN_STAGES.length; i++) {
+      set({ replanStage: i });
+      await wait(520);
+    }
+
+    const st = get();
+    const result = planMission({ area: st.area, zones: st.zones, config: st.config, home: st.home });
+    if (!result.ok) {
+      set((p) => ({
+        replanning: false,
+        replanStage: -1,
+        zones: p.zones.filter((z) => z.id !== obstacle.id),
+        events: [
+          ...p.events,
+          {
+            id: `ev-replan-fail-${Date.now()}`,
+            t: Math.round(p.simElapsed),
+            level: "critical",
+            title: "Replanning Failed",
+            message: "No valid alternative satisfies the battery and coverage constraints (simulated).",
+          },
+        ],
+      }));
+      return;
+    }
+
+    const adapted = result.routes.find((r) => r.strategy === st.selectedStrategy) ?? result.routes[0]!;
+    const after = snapshotRoute(adapted, "Adapted Route");
+    const manual = planManualRoute(st.area, st.zones, st.config, st.home);
+
+    set((p) => ({
+      replanning: false,
+      replanStage: REPLAN_STAGES.length,
+      routes: result.routes,
+      manual,
+      comparison: manual ? compareRoutes(adapted, manual) : p.comparison,
+      adaptedSnapshot: after,
+      aiDecision: buildReplanDecision(before, after),
+      adaptations: p.adaptations + 1,
+      simDistance: Math.min(p.simDistance, adapted.metrics.distance - 1),
+      events: [
+        ...p.events,
+        {
+          id: `ev-replan-${Date.now()}`,
+          t: Math.round(p.simElapsed),
+          level: "warning",
+          title: "Route Adapted",
+          message: `Alternative corridor accepted — coverage ${after.coverage.toFixed(1)}%, reserve ${after.reserve}%.`,
+        },
+      ],
+    }));
+  },
+
   demoRunning: false,
 
   setMissionName: (v) => set({ missionName: v }),
@@ -484,6 +608,14 @@ export const useMission = create<State>((set, get) => ({
       ],
       telemetry: [],
       lastReportId: null,
+      adaptations: 0,
+      replanStage: -1,
+      replanning: false,
+      originalSnapshot: null,
+      adaptedSnapshot: null,
+      originalPath: null,
+      aiDecision: null,
+
     });
     tickLoop(set, get);
   },
