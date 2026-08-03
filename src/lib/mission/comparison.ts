@@ -117,8 +117,14 @@ export function explainRoute(
     out.push("No restricted zones were declared, so the grid was allowed to run edge-to-edge.");
   }
   out.push(
-    `Estimated battery usage is ${Math.round(route.metrics.batteryUsage)}% against a ${config.rthThreshold}% return-to-home threshold, leaving ${Math.round(route.metrics.batteryRemaining)}% reserve — ${route.metrics.rthFeasible ? "return-to-home remains feasible from the furthest waypoint" : "return-to-home is NOT feasible; reduce area or altitude"}.`,
+    `Estimated battery usage is ${Math.round(route.metrics.batteryUsage)}% per sortie against a ${config.rthThreshold}% return-to-home threshold, leaving ${Math.round(route.metrics.batteryRemaining)}% reserve — ${route.metrics.rthFeasible ? "return-to-home remains feasible from the furthest waypoint" : "return-to-home is NOT feasible; reduce area or altitude"}.`,
   );
+  if (route.metrics.sorties > 1) {
+    out.push(
+      `The grid exceeds a single battery endurance, so the mission was split into ${route.metrics.sorties} sorties with a battery swap at the home point between each leg.`,
+    );
+  }
+
   out.push(
     `Wind condition "${config.wind}" was applied as a speed and energy penalty, and the ${route.label.toLowerCase()} profile was scored highest overall (${route.score.overall}/100) across efficiency, coverage and safety.`,
   );
