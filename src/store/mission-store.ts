@@ -19,7 +19,6 @@ import {
 } from "@/lib/mission/comparison";
 import {
   buildReplanDecision,
-  computeMissionScore,
   REPLAN_STAGES,
   simulatedObstacle,
   snapshotRoute,
