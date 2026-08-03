@@ -40,7 +40,9 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
       { to: "/detections", label: "Detections", icon: Crosshair },
       { to: "/imagery", label: "Aerial Imagery", icon: Camera },
       { to: "/egypt", label: "Reconnaissance", icon: Globe2 },
+      { to: "/change-detection", label: "Change Detection", icon: Camera },
       { to: "/history", label: "Mission History", icon: History },
+      { to: "/replay", label: "Mission Replay", icon: History },
       { to: "/analytics", label: "Analytics", icon: BarChart3 },
     ],
   },
@@ -48,7 +50,9 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     label: "Fleet",
     items: [
       { to: "/fleet", label: "Drone Fleet", icon: Cpu },
+      { to: "/fleet-ops", label: "Fleet Operations", icon: ShieldAlert },
       { to: "/live", label: "Telemetry", icon: Gauge },
+
     ],
   },
   {

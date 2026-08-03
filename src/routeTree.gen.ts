@@ -17,6 +17,7 @@ import { Route as ControlRouteImport } from './routes/control'
 import { Route as DetectionsRouteImport } from './routes/detections'
 import { Route as EgyptRouteImport } from './routes/egypt'
 import { Route as FleetRouteImport } from './routes/fleet'
+import { Route as FleetOpsRouteImport } from './routes/fleet-ops'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as ImageryRouteImport } from './routes/imagery'
 import { Route as LiveRouteImport } from './routes/live'
@@ -65,6 +66,11 @@ const EgyptRoute = EgyptRouteImport.update({
 const FleetRoute = FleetRouteImport.update({
   id: '/fleet',
   path: '/fleet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetOpsRoute = FleetOpsRouteImport.update({
+  id: '/fleet-ops',
+  path: '/fleet-ops',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
+  '/fleet-ops': typeof FleetOpsRoute
   '/history': typeof HistoryRoute
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
+  '/fleet-ops': typeof FleetOpsRoute
   '/history': typeof HistoryRoute
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/detections': typeof DetectionsRoute
   '/egypt': typeof EgyptRoute
   '/fleet': typeof FleetRoute
+  '/fleet-ops': typeof FleetOpsRoute
   '/history': typeof HistoryRoute
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/detections'
     | '/egypt'
     | '/fleet'
+    | '/fleet-ops'
     | '/history'
     | '/imagery'
     | '/live'
@@ -201,6 +211,7 @@ export interface FileRouteTypes {
     | '/detections'
     | '/egypt'
     | '/fleet'
+    | '/fleet-ops'
     | '/history'
     | '/imagery'
     | '/live'
@@ -220,6 +231,7 @@ export interface FileRouteTypes {
     | '/detections'
     | '/egypt'
     | '/fleet'
+    | '/fleet-ops'
     | '/history'
     | '/imagery'
     | '/live'
@@ -240,6 +252,7 @@ export interface RootRouteChildren {
   DetectionsRoute: typeof DetectionsRoute
   EgyptRoute: typeof EgyptRoute
   FleetRoute: typeof FleetRoute
+  FleetOpsRoute: typeof FleetOpsRoute
   HistoryRoute: typeof HistoryRoute
   ImageryRoute: typeof ImageryRoute
   LiveRoute: typeof LiveRoute
@@ -307,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/fleet'
       fullPath: '/fleet'
       preLoaderRoute: typeof FleetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet-ops': {
+      id: '/fleet-ops'
+      path: '/fleet-ops'
+      fullPath: '/fleet-ops'
+      preLoaderRoute: typeof FleetOpsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -384,6 +404,7 @@ const rootRouteChildren: RootRouteChildren = {
   DetectionsRoute: DetectionsRoute,
   EgyptRoute: EgyptRoute,
   FleetRoute: FleetRoute,
+  FleetOpsRoute: FleetOpsRoute,
   HistoryRoute: HistoryRoute,
   ImageryRoute: ImageryRoute,
   LiveRoute: LiveRoute,
