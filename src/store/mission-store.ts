@@ -609,6 +609,14 @@ export const useMission = create<State>((set, get) => ({
       ],
       telemetry: [],
       lastReportId: null,
+      adaptations: 0,
+      replanStage: -1,
+      replanning: false,
+      originalSnapshot: null,
+      adaptedSnapshot: null,
+      originalPath: null,
+      aiDecision: null,
+
     });
     tickLoop(set, get);
   },
