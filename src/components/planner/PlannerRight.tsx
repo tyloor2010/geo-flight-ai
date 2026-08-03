@@ -57,6 +57,8 @@ export function PlannerRight() {
     comparison,
     settings,
     updateSettings,
+    applySuggestion,
+    generate,
   } = useMission();
   const [whyOpen, setWhyOpen] = useState(false);
   const route = routes.find((r) => r.strategy === selectedStrategy) ?? null;
@@ -106,14 +108,24 @@ export function PlannerRight() {
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
             <p className="text-[12px] leading-relaxed text-foreground">{planError.reason}</p>
           </div>
-          <div className="label-mono mt-3">Suggested actions</div>
+          <div className="label-mono mt-3">Suggested actions — click to apply</div>
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             {planError.suggestions.map((s) => (
-              <Badge key={s} variant="outline" className="border-border text-[11px] font-normal">
+              <Button
+                key={s}
+                size="sm"
+                variant="outline"
+                className="h-7 border-border text-[11px] font-normal"
+                onClick={() => applySuggestion(s)}
+              >
                 {s}
-              </Badge>
+              </Button>
             ))}
           </div>
+          <Button className="mt-3 w-full" size="sm" onClick={() => void generate()}>
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5" /> Retry Generation
+          </Button>
+
         </Panel>
       </div>
     );
@@ -181,6 +193,11 @@ export function PlannerRight() {
           <Stat label="Safety Margin" value={`${Math.round(m.safetyMargin)}%`} />
           <Stat label="Waypoints" value={m.waypointCount} />
           <Stat label="Est. Images" value={m.images} />
+          <Stat
+            label="Battery Sorties"
+            value={m.sorties > 1 ? `${m.sorties} × swap` : "1 (single)"}
+            tone={m.sorties > 1 ? "warning" : "success"}
+          />
         </div>
         <div className="mt-2 flex items-center justify-between rounded-sm border border-border/70 bg-background/40 px-3 py-2">
           <span className="label-mono">Risk Level</span>
@@ -276,15 +293,30 @@ export function PlannerRight() {
               </div>
             </div>
             <div className="rounded-sm border border-success/40 bg-success/10 px-2 py-2">
-              <div className="label-mono text-success">Improvement</div>
-              <div className="mt-1 font-mono text-[12px] text-success">
-                −{comparison.distanceSaved}%
+              <div className="label-mono text-success">Delta</div>
+              <div
+                className={cn(
+                  "mt-1 font-mono text-[12px]",
+                  comparison.distanceSaved >= 0 ? "text-success" : "text-warning",
+                )}
+              >
+                {comparison.distanceSaved >= 0 ? "−" : "+"}
+                {Math.abs(comparison.distanceSaved)}% dist
               </div>
-              <div className="font-mono text-[11px] text-success">−{comparison.timeSaved}% time</div>
+              <div
+                className={cn(
+                  "font-mono text-[11px]",
+                  comparison.timeSaved >= 0 ? "text-success" : "text-warning",
+                )}
+              >
+                {comparison.timeSaved >= 0 ? "−" : "+"}
+                {Math.abs(comparison.timeSaved)}% time
+              </div>
               <div className="font-mono text-[11px] text-success">
-                +{comparison.coverageGain} pts
+                +{comparison.coverageGain} pts cov
               </div>
             </div>
+
           </div>
           <p className="mt-2 text-[10.5px] leading-snug text-muted-foreground">
             Baseline is a conventional manual lawnmower pattern with a full boundary lap and no

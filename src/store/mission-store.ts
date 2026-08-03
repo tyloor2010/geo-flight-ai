@@ -120,6 +120,8 @@ type State = {
   setLocation: (key: EgyptLocationKey, opts?: { loadArea?: boolean }) => void;
   applyTemplate: (id: MissionTemplateId) => void;
   loadDemoMission: () => void;
+  applySuggestion: (action: string) => void;
+
   generate: () => Promise<void>;
   selectStrategy: (s: RouteStrategy) => void;
   selectWaypoint: (i: number | null) => void;
@@ -361,6 +363,62 @@ export const useMission = create<State>((set, get) => ({
       telemetry: [],
       config: { ...s.config, objective: "survey", altitude: 80, wind: "moderate" },
     })),
+
+  applySuggestion: (action) => {
+    const s = get();
+    const cfg = s.config;
+    switch (action) {
+      case "Reduce Coverage":
+        set({
+          config: {
+            ...cfg,
+            sideOverlap: Math.max(0.2, cfg.sideOverlap - 0.15),
+            frontOverlap: Math.max(0.3, cfg.frontOverlap - 0.1),
+          },
+        });
+        break;
+      case "Increase Battery":
+        set({
+          config: { ...cfg, startBattery: 100, safetyReserve: Math.max(10, cfg.safetyReserve - 5) },
+          settings: { ...s.settings, batteryReserve: Math.max(10, cfg.safetyReserve - 5) },
+        });
+        break;
+      case "Change Drone": {
+        const best = [...s.drones].sort((a, b) => b.maxFlightTime - a.maxFlightTime)[0];
+        if (best) get().selectDrone(best.id);
+        break;
+      }
+      case "Optimize Mission":
+        set({
+          config: {
+            ...cfg,
+            altitude: Math.min(120, cfg.altitude + 20),
+            speed: Math.min(20, cfg.speed + 2),
+            wind: "low",
+          },
+        });
+        break;
+      case "Reduce Altitude":
+        set({ config: { ...cfg, altitude: Math.max(20, cfg.altitude - 20) } });
+        break;
+      case "Load Demo Mission":
+        get().loadDemoMission();
+        break;
+      case "Draw Survey Area":
+      case "Enlarge Survey Area":
+      case "Move Survey Area":
+        set({ drawMode: "area", planStatus: "idle", planError: null });
+        return;
+      case "Edit Restricted Zones":
+        set({ drawMode: "zone", planStatus: "idle", planError: null });
+        return;
+      default:
+        break;
+    }
+    void get().generate();
+  },
+
+
 
   generate: async () => {
     const { area, zones, config, home } = get();

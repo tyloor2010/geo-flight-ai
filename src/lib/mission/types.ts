@@ -74,6 +74,7 @@ export type RouteMetrics = {
   lineSpacing: number;
   rthDistance: number;
   rthFeasible: boolean;
+  sorties: number; // number of battery sorties required
 };
 
 export type RouteScore = {
