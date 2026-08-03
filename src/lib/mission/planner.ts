@@ -267,7 +267,13 @@ function buildRoute(strategy: RouteStrategy, input: PlanInput, areaM2: number): 
 
   const drainPerMin = (100 / Math.max(6, config.maxFlightTime)) * windFactor;
   const payloadFactor = config.payload === "sensor" ? 1.08 : config.payload === "camera" ? 1.03 : 1;
-  const batteryUsage = Math.min(140, durationMin * drainPerMin * payloadFactor);
+  const totalBatteryUsage = Math.min(400, durationMin * drainPerMin * payloadFactor);
+
+  // Multi-sortie planning: when a single battery cannot cover the whole grid,
+  // the mission is split into N sorties (battery swap at the home point).
+  const usablePerSortie = Math.max(10, config.startBattery - config.safetyReserve);
+  const sorties = Math.max(1, Math.ceil(totalBatteryUsage / usablePerSortie));
+  const batteryUsage = totalBatteryUsage / sorties;
   const batteryRemaining = config.startBattery - batteryUsage;
 
   const sweptArea = lines.reduce(
@@ -284,12 +290,12 @@ function buildRoute(strategy: RouteStrategy, input: PlanInput, areaM2: number): 
   const imageInterval = Math.max(4, footprint * 0.72 * (1 - config.frontOverlap));
   const images = Math.round(surveyDistance / imageInterval);
 
-  const waypoints = buildWaypoints(path, altitude, speed, config, batteryUsage, windFactor);
+  const waypoints = buildWaypoints(path, altitude, speed, config, totalBatteryUsage, windFactor, sorties);
 
   const risk: RouteMetrics["risk"] =
     !rthFeasible || safetyMargin < 4
       ? "high"
-      : config.wind === "high" || safetyMargin < 12 || zones.length > 2
+      : config.wind === "high" || safetyMargin < 12 || zones.length > 2 || sorties > 2
         ? "moderate"
         : "low";
 
@@ -306,7 +312,9 @@ function buildRoute(strategy: RouteStrategy, input: PlanInput, areaM2: number): 
     lineSpacing: spacing,
     rthDistance,
     rthFeasible,
+    sorties,
   };
+
 
   const idealDistance = effectiveArea / Math.max(spacing, 1);
   const routeEfficiency = clamp((idealDistance / Math.max(surveyDistance, 1)) * 100, 45, 99);
