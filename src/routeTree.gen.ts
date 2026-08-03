@@ -20,6 +20,7 @@ import { Route as HistoryRouteImport } from './routes/history'
 import { Route as ImageryRouteImport } from './routes/imagery'
 import { Route as LiveRouteImport } from './routes/live'
 import { Route as PlannerRouteImport } from './routes/planner'
+import { Route as ReplayRouteImport } from './routes/replay'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as VisiontrackRouteImport } from './routes/visiontrack'
@@ -80,6 +81,11 @@ const PlannerRoute = PlannerRouteImport.update({
   path: '/planner',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReplayRoute = ReplayRouteImport.update({
+  id: '/replay',
+  path: '/replay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
+  '/replay': typeof ReplayRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
   '/visiontrack': typeof VisiontrackRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
+  '/replay': typeof ReplayRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
   '/visiontrack': typeof VisiontrackRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/imagery': typeof ImageryRoute
   '/live': typeof LiveRoute
   '/planner': typeof PlannerRoute
+  '/replay': typeof ReplayRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
   '/visiontrack': typeof VisiontrackRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/imagery'
     | '/live'
     | '/planner'
+    | '/replay'
     | '/settings'
     | '/system'
     | '/visiontrack'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/imagery'
     | '/live'
     | '/planner'
+    | '/replay'
     | '/settings'
     | '/system'
     | '/visiontrack'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/imagery'
     | '/live'
     | '/planner'
+    | '/replay'
     | '/settings'
     | '/system'
     | '/visiontrack'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   ImageryRoute: typeof ImageryRoute
   LiveRoute: typeof LiveRoute
   PlannerRoute: typeof PlannerRoute
+  ReplayRoute: typeof ReplayRoute
   SettingsRoute: typeof SettingsRoute
   SystemRoute: typeof SystemRoute
   VisiontrackRoute: typeof VisiontrackRoute
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/replay': {
+      id: '/replay'
+      path: '/replay'
+      fullPath: '/replay'
+      preLoaderRoute: typeof ReplayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -347,6 +367,7 @@ const rootRouteChildren: RootRouteChildren = {
   ImageryRoute: ImageryRoute,
   LiveRoute: LiveRoute,
   PlannerRoute: PlannerRoute,
+  ReplayRoute: ReplayRoute,
   SettingsRoute: SettingsRoute,
   SystemRoute: SystemRoute,
   VisiontrackRoute: VisiontrackRoute,
