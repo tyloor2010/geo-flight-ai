@@ -105,6 +105,18 @@ type State = {
   lastReportId: string | null;
   demoRunning: boolean;
 
+  /** Autonomous in-flight replanning (simulated) */
+  replanStage: number;
+  replanning: boolean;
+  originalSnapshot: RouteSnapshot | null;
+  adaptedSnapshot: RouteSnapshot | null;
+  originalPath: LatLng[] | null;
+  aiDecision: AiDecision | null;
+  adaptations: number;
+  triggerObstacle: () => Promise<void>;
+  clearAdaptation: () => void;
+
+
   setMissionName: (v: string) => void;
   setDrawMode: (m: DrawMode) => void;
   setPendingZoneKind: (k: ZoneKind) => void;
