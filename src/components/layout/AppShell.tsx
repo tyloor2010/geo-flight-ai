@@ -6,6 +6,7 @@ import {
   Camera,
   Cpu,
   Crosshair,
+  FlaskConical,
   Gauge,
   Globe2,
   HeartPulse,
@@ -48,6 +49,12 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     items: [
       { to: "/fleet", label: "Drone Fleet", icon: Cpu },
       { to: "/live", label: "Telemetry", icon: Gauge },
+    ],
+  },
+  {
+    label: "Labs",
+    items: [
+      { to: "/visiontrack", label: "VisionTrack AI", icon: FlaskConical },
     ],
   },
   {
