@@ -20,6 +20,7 @@ import { useThemeSync } from "@/lib/theme";
 import { CommandBar } from "@/components/command/CommandBar";
 import { DetectionDetail } from "@/components/detections/DetectionDetail";
 import { ImageViewer } from "@/components/imagery/ImageViewer";
+import { DeveloperCredit } from "@/components/brand/DeveloperCredit";
 import { cn } from "@/lib/utils";
 
 type NavItem = { to: string; label: string; icon: typeof Cpu };
