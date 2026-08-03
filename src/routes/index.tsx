@@ -251,17 +251,22 @@ Simulation prototype · fictional demo zones · no classified, military or opera
       </section>
 
       <footer className="border-t border-border py-10">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Logo size={20} className="text-primary" />
-            <span className="text-[13px]">DroneRoute AI Egypt · ITC Prototype</span>
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Logo size={20} className="text-primary" />
+              <span className="text-[13px]">DroneRoute AI Egypt · ITC Prototype</span>
+            </div>
+            <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
+              <Link to="/about" className="hover:text-foreground">About the Technology</Link>
+              <Link to="/analytics" className="hover:text-foreground">Analytics</Link>
+              <span className="flex items-center gap-1.5">
+                <Cpu className="h-3.5 w-3.5" /> Simulation Layer v1.0
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
-            <Link to="/about" className="hover:text-foreground">About the Technology</Link>
-            <Link to="/analytics" className="hover:text-foreground">Analytics</Link>
-            <span className="flex items-center gap-1.5">
-              <Cpu className="h-3.5 w-3.5" /> Simulation Layer v1.0
-            </span>
+          <div className="rounded-md border border-border bg-panel/40 p-3">
+            <DeveloperCreditBar />
           </div>
         </div>
       </footer>
