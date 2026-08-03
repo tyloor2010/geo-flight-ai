@@ -57,6 +57,8 @@ export function PlannerRight() {
     comparison,
     settings,
     updateSettings,
+    applySuggestion,
+    generate,
   } = useMission();
   const [whyOpen, setWhyOpen] = useState(false);
   const route = routes.find((r) => r.strategy === selectedStrategy) ?? null;
@@ -191,6 +193,11 @@ export function PlannerRight() {
           <Stat label="Safety Margin" value={`${Math.round(m.safetyMargin)}%`} />
           <Stat label="Waypoints" value={m.waypointCount} />
           <Stat label="Est. Images" value={m.images} />
+          <Stat
+            label="Battery Sorties"
+            value={m.sorties > 1 ? `${m.sorties} × swap` : "1 (single)"}
+            tone={m.sorties > 1 ? "warning" : "success"}
+          />
         </div>
         <div className="mt-2 flex items-center justify-between rounded-sm border border-border/70 bg-background/40 px-3 py-2">
           <span className="label-mono">Risk Level</span>
