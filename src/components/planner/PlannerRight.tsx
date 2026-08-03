@@ -293,15 +293,30 @@ export function PlannerRight() {
               </div>
             </div>
             <div className="rounded-sm border border-success/40 bg-success/10 px-2 py-2">
-              <div className="label-mono text-success">Improvement</div>
-              <div className="mt-1 font-mono text-[12px] text-success">
-                −{comparison.distanceSaved}%
+              <div className="label-mono text-success">Delta</div>
+              <div
+                className={cn(
+                  "mt-1 font-mono text-[12px]",
+                  comparison.distanceSaved >= 0 ? "text-success" : "text-warning",
+                )}
+              >
+                {comparison.distanceSaved >= 0 ? "−" : "+"}
+                {Math.abs(comparison.distanceSaved)}% dist
               </div>
-              <div className="font-mono text-[11px] text-success">−{comparison.timeSaved}% time</div>
+              <div
+                className={cn(
+                  "font-mono text-[11px]",
+                  comparison.timeSaved >= 0 ? "text-success" : "text-warning",
+                )}
+              >
+                {comparison.timeSaved >= 0 ? "−" : "+"}
+                {Math.abs(comparison.timeSaved)}% time
+              </div>
               <div className="font-mono text-[11px] text-success">
-                +{comparison.coverageGain} pts
+                +{comparison.coverageGain} pts cov
               </div>
             </div>
+
           </div>
           <p className="mt-2 text-[10.5px] leading-snug text-muted-foreground">
             Baseline is a conventional manual lawnmower pattern with a full boundary lap and no
