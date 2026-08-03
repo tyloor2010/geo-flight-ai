@@ -358,6 +358,7 @@ function buildWaypoints(
   config: MissionConfig,
   batteryUsage: number,
   windFactor: number,
+  sorties = 1,
 ): Waypoint[] {
   const total = pathLength(path);
   const out: Waypoint[] = [];
@@ -372,7 +373,11 @@ function buildWaypoints(
       altitude: i === 0 ? 0 : Math.round(altitude),
       distanceFromStart: acc,
       etaSeconds: (acc / speed) * windFactor,
-      battery: Math.max(0, config.startBattery - batteryUsage * frac),
+      battery: Math.max(
+        0,
+        config.startBattery -
+          ((batteryUsage * frac) % (batteryUsage / sorties || batteryUsage)),
+      ),
       action:
         i === 0
           ? "Takeoff / Home Point"
