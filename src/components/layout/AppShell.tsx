@@ -52,6 +52,12 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
     ],
   },
   {
+    label: "Labs",
+    items: [
+      { to: "/visiontrack", label: "VisionTrack AI", icon: FlaskConical },
+    ],
+  },
+  {
     label: "System",
     items: [
       { to: "/settings", label: "Settings", icon: SettingsIcon },
