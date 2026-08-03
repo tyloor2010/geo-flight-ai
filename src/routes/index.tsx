@@ -10,6 +10,7 @@ import {
   Workflow,
 } from "lucide-react";
 import { Logo, Wordmark } from "@/components/brand/Logo";
+import { DeveloperCreditBar } from "@/components/brand/DeveloperCredit";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/hud/primitives";
 
