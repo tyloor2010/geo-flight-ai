@@ -158,7 +158,17 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         )}
         {!presentation && <MobileNav pathname={pathname} />}
-        {children}
+        <main className="flex-1">{children}</main>
+        {!presentation && (
+          <footer className="border-t border-border bg-background px-4 py-2.5">
+            <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <DeveloperCredit />
+              <div className="text-[10px] text-muted-foreground">
+                DroneRoute AI Egypt · ITC Prototype · Simulation Only
+              </div>
+            </div>
+          </footer>
+        )}
       </div>
 
       <DetectionDetail />
