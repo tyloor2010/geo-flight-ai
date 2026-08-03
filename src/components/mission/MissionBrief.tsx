@@ -19,7 +19,7 @@ export function MissionBrief() {
   const brief = buildBrief({
     missionName,
     locationName: getLocation(locationKey).name,
-    missionType: getTemplate(templateId).name,
+    missionType: templateId ? getTemplate(templateId).name : config.objective.toUpperCase(),
     droneModel: drone?.model ?? "—",
     area,
     route,
