@@ -17,6 +17,16 @@ import {
   type Comparison,
   type ManualRoute,
 } from "@/lib/mission/comparison";
+import {
+  buildReplanDecision,
+  computeMissionScore,
+  REPLAN_STAGES,
+  simulatedObstacle,
+  snapshotRoute,
+  type AiDecision,
+  type RouteSnapshot,
+} from "@/lib/mission/intel";
+
 import type {
   DroneSpec,
   LatLng,
