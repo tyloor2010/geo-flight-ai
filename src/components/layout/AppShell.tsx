@@ -134,6 +134,9 @@ export function AppShell({ children }: { children: ReactNode }) {
               <br />
               Prototype v1.2 · No live aircraft
             </p>
+            <div className="mt-3 border-t border-sidebar-border pt-3">
+              <DeveloperCredit />
+            </div>
           </div>
         </aside>
       )}
