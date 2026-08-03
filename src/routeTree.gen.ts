@@ -22,6 +22,7 @@ import { Route as LiveRouteImport } from './routes/live'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SystemRouteImport } from './routes/system'
+import { Route as VisiontrackRouteImport } from './routes/visiontrack'
 import { Route as ReportMissionIdRouteImport } from './routes/report.$missionId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -89,6 +90,11 @@ const SystemRoute = SystemRouteImport.update({
   path: '/system',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VisiontrackRoute = VisiontrackRouteImport.update({
+  id: '/visiontrack',
+  path: '/visiontrack',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportMissionIdRoute = ReportMissionIdRouteImport.update({
   id: '/report/$missionId',
   path: '/report/$missionId',
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
+  '/visiontrack': typeof VisiontrackRoute
   '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRoutesByTo {
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
+  '/visiontrack': typeof VisiontrackRoute
   '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRoutesById {
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/planner': typeof PlannerRoute
   '/settings': typeof SettingsRoute
   '/system': typeof SystemRoute
+  '/visiontrack': typeof VisiontrackRoute
   '/report/$missionId': typeof ReportMissionIdRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/planner'
     | '/settings'
     | '/system'
+    | '/visiontrack'
     | '/report/$missionId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/planner'
     | '/settings'
     | '/system'
+    | '/visiontrack'
     | '/report/$missionId'
   id:
     | '__root__'
@@ -192,6 +203,7 @@ export interface FileRouteTypes {
     | '/planner'
     | '/settings'
     | '/system'
+    | '/visiontrack'
     | '/report/$missionId'
   fileRoutesById: FileRoutesById
 }
@@ -209,6 +221,7 @@ export interface RootRouteChildren {
   PlannerRoute: typeof PlannerRoute
   SettingsRoute: typeof SettingsRoute
   SystemRoute: typeof SystemRoute
+  VisiontrackRoute: typeof VisiontrackRoute
   ReportMissionIdRoute: typeof ReportMissionIdRoute
 }
 
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SystemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/visiontrack': {
+      id: '/visiontrack'
+      path: '/visiontrack'
+      fullPath: '/visiontrack'
+      preLoaderRoute: typeof VisiontrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/report/$missionId': {
       id: '/report/$missionId'
       path: '/report/$missionId'
@@ -329,8 +349,19 @@ const rootRouteChildren: RootRouteChildren = {
   PlannerRoute: PlannerRoute,
   SettingsRoute: SettingsRoute,
   SystemRoute: SystemRoute,
+  VisiontrackRoute: VisiontrackRoute,
   ReportMissionIdRoute: ReportMissionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

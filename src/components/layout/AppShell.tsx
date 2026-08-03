@@ -6,6 +6,7 @@ import {
   Camera,
   Cpu,
   Crosshair,
+  FlaskConical,
   Gauge,
   Globe2,
   HeartPulse,
